@@ -1,0 +1,552 @@
+{
+  "bases": {
+    "bibliotheque": {
+      "titre": "Bibliothèque",
+      "schema": "Adherent(id_adherent, nom, prenom, ville)\nLivre(id_livre, titre, auteur, annee, genre)\nEmprunt(id_emprunt, #id_adherent, #id_livre, date_emprunt, date_retour)",
+      "script": "PRAGMA foreign_keys = ON;\n\nCREATE TABLE Adherent (\n  id_adherent INTEGER PRIMARY KEY,\n  nom TEXT NOT NULL,\n  prenom TEXT NOT NULL,\n  ville TEXT\n);\n\nCREATE TABLE Livre (\n  id_livre INTEGER PRIMARY KEY,\n  titre TEXT NOT NULL,\n  auteur TEXT NOT NULL,\n  annee INTEGER,\n  genre TEXT\n);\n\nCREATE TABLE Emprunt (\n  id_emprunt INTEGER PRIMARY KEY,\n  id_adherent INTEGER NOT NULL,\n  id_livre INTEGER NOT NULL,\n  date_emprunt TEXT NOT NULL,\n  date_retour TEXT,\n  FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent),\n  FOREIGN KEY (id_livre) REFERENCES Livre(id_livre)\n);\n\nINSERT INTO Adherent VALUES\n  (1, 'Diallo', 'Aminata', 'Lyon'),\n  (2, 'Martin', 'Lucas', 'Paris'),\n  (3, 'Nguyen', 'Linh', 'Lyon'),\n  (4, 'Benali', 'Yanis', 'Marseille'),\n  (5, 'Moreau', 'Chloé', 'Paris'),\n  (6, 'Traoré', 'Moussa', 'Lille'),\n  (7, 'Petit', 'Emma', 'Lyon'),\n  (8, 'Rossi', 'Hugo', 'Marseille');\n\nINSERT INTO Livre VALUES\n  (1, 'Les Misérables', 'Victor Hugo', 1862, 'roman'),\n  (2, 'Notre-Dame de Paris', 'Victor Hugo', 1831, 'roman'),\n  (3, 'La Peste', 'Albert Camus', 1947, 'roman'),\n  (4, 'Le Petit Prince', 'Antoine de Saint-Exupéry', 1943, 'conte'),\n  (5, 'Une si longue lettre', 'Mariama Bâ', 1979, 'roman'),\n  (6, 'Persepolis', 'Marjane Satrapi', 2000, 'bd'),\n  (7, 'Astérix le Gaulois', 'René Goscinny', 1961, 'bd'),\n  (8, 'Le Horla', 'Guy de Maupassant', 1887, 'nouvelle'),\n  (9, 'Fondation', 'Isaac Asimov', 1951, 'science-fiction'),\n  (10, 'Dune', 'Frank Herbert', 1965, 'science-fiction'),\n  (11, 'Les Fleurs du mal', 'Charles Baudelaire', 1857, 'poésie'),\n  (12, 'Bel-Ami', 'Guy de Maupassant', 1885, 'roman');\n\nINSERT INTO Emprunt VALUES\n  (1, 1, 1, '2026-09-02', '2026-09-20'),\n  (2, 1, 6, '2026-09-15', '2026-09-29'),\n  (3, 2, 9, '2026-09-05', '2026-09-26'),\n  (4, 2, 10, '2026-10-01', NULL),\n  (5, 3, 4, '2026-09-10', '2026-09-17'),\n  (6, 3, 5, '2026-10-03', '2026-10-24'),\n  (7, 3, 1, '2026-10-12', NULL),\n  (8, 4, 7, '2026-09-18', '2026-09-25'),\n  (9, 5, 2, '2026-09-22', '2026-10-15'),\n  (10, 5, 11, '2026-10-20', NULL),\n  (11, 6, 6, '2026-10-02', '2026-10-16'),\n  (12, 1, 9, '2026-10-05', '2026-10-19'),\n  (13, 7, 3, '2026-10-14', '2026-11-02'),\n  (14, 2, 4, '2026-11-03', NULL);"
+    }
+  },
+  "exercices": [
+    {
+      "id": "py-00",
+      "theme": "python",
+      "competences": [
+        "py-syntaxe"
+      ],
+      "titre": "Échauffement : variables et opérateurs",
+      "type": "lire",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 5,
+      "enonce": "Lis ce code sans l'exécuter. Sur ta feuille, écris ce qu'affiche chaque print, ligne par ligne.\nEnsuite seulement, lance-le dans Basthon et compare.\nFais bien attention à la différence entre / , // et %.",
+      "code": "a = 7\nb = 2\nc = a + b * 3\nprint(c)\nprint(a / b)\nprint(a // b, a % b)\nmot = \"NSI\" + \"!\"\nprint(mot, len(mot))\na = a + 1\nprint(a * b)",
+      "tests": "",
+      "indice": "La multiplication est calculée avant l'addition. // donne le quotient entier, % donne le reste.",
+      "correction": "Affichage :\n```\n13\n3.5\n3 1\nNSI! 4\n16\n```\n- c = 7 + 2 * 3 = 7 + 6 = 13 (la multiplication d'abord).\n- 7 / 2 = 3.5 : / donne toujours un nombre à virgule (float).\n- 7 // 2 = 3 (quotient entier) et 7 % 2 = 1 (reste) : 7 = 2 × 3 + 1.\n- \"NSI\" + \"!\" colle les deux textes : \"NSI!\", qui contient 4 caractères.\n- a vaut maintenant 8, donc a * b = 16.",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-01",
+      "theme": "python",
+      "competences": [
+        "py-listes-acces",
+        "py-conditions"
+      ],
+      "titre": "Lire une liste et un if / elif / else",
+      "type": "lire",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "Lis ce code et écris sur ta feuille ce qu'il affiche.\nRappel : le premier élément d'une liste a l'indice 0, et l'indice -1 désigne le dernier élément.\nVérifie ensuite dans Basthon.",
+      "code": "notes = [12, 8, 15, 9, 17]\nprint(notes[0])\nprint(notes[2] + notes[-1])\nprint(len(notes))\nn = notes[3]\nif n >= 10:\n    print(\"validé\")\nelif n >= 8:\n    print(\"rattrapage\")\nelse:\n    print(\"non validé\")\nnotes[1] = 11\nprint(notes)",
+      "tests": "",
+      "indice": "Numérote les cases de la liste au crayon : 0, 1, 2, 3, 4. Pour le if, une seule branche est exécutée : la première dont la condition est vraie.",
+      "correction": "Affichage :\n```\n12\n32\n5\nrattrapage\n[12, 11, 15, 9, 17]\n```\n- notes[0] est le premier élément : 12.\n- notes[2] vaut 15 et notes[-1] (le dernier) vaut 17 : 15 + 17 = 32.\n- La liste contient 5 éléments.\n- n = notes[3] = 9. 9 >= 10 est faux, 9 >= 8 est vrai : on affiche \"rattrapage\" et on ne regarde pas le else.\n- notes[1] = 11 remplace le 8 (indice 1) par 11.",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-02",
+      "theme": "python",
+      "competences": [
+        "py-boucles",
+        "py-listes-acces"
+      ],
+      "titre": "Tableau de variables : une boucle for",
+      "type": "trace",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 15,
+      "enonce": "Sans exécuter le code, remplis sur ta feuille un tableau avec une ligne par tour de boucle :\n```\ni | liste[i] | total | nb_pairs\n```\nCommence par une ligne « avant la boucle », puis écris ce qu'affiche le print final.\nVérifie ensuite dans Basthon (tu peux ajouter un print dans la boucle pour voir chaque tour).",
+      "code": "liste = [4, 7, 2, 9]\ntotal = 0\nnb_pairs = 0\nfor i in range(len(liste)):\n    total = total + liste[i]\n    if liste[i] % 2 == 0:\n        nb_pairs = nb_pairs + 1\nprint(total, nb_pairs)",
+      "tests": "",
+      "indice": "range(len(liste)) donne les indices 0, 1, 2, 3. Un nombre est pair quand le reste de sa division par 2 vaut 0.",
+      "correction": "Tableau des variables (valeurs à la fin de chaque tour) :\n```\ni      | liste[i] | total | nb_pairs\navant  |    -     |   0   |    0\n0      |    4     |   4   |    1\n1      |    7     |  11   |    1\n2      |    2     |  13   |    2\n3      |    9     |  22   |    2\n```\nAffichage : 22 2\ntotal est la somme des éléments, nb_pairs compte les éléments pairs (4 et 2).",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-03",
+      "theme": "python",
+      "competences": [
+        "py-dict-acces",
+        "py-dict-parcours"
+      ],
+      "titre": "Tableau de variables : un dictionnaire",
+      "type": "trace",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 15,
+      "enonce": "Lis ce code. Sur ta feuille :\n- écris le contenu du dictionnaire stock juste avant la boucle ;\n- remplis un tableau avec une ligne par tour : fruit | quantite | total | manque ;\n- écris les deux lignes affichées à la fin.\nRappel : un dictionnaire garde l'ordre dans lequel les clés ont été ajoutées, et modifier une valeur ne change pas la place de sa clé.\nVérifie ensuite dans Basthon.",
+      "code": "stock = {\"pommes\": 5, \"poires\": 0, \"kiwis\": 3}\nstock[\"poires\"] = stock[\"poires\"] + 4\nstock[\"bananes\"] = 6\ntotal = 0\nmanque = []\nfor fruit, quantite in stock.items():\n    total = total + quantite\n    if quantite < 5:\n        manque.append(fruit)\nprint(stock)\nprint(total, manque)",
+      "tests": "",
+      "indice": "stock[\"bananes\"] = 6 crée une nouvelle clé (elle n'existait pas). stock.items() donne les couples (clé, valeur) un par un.",
+      "correction": "Avant la boucle : {\"pommes\": 5, \"poires\": 4, \"kiwis\": 3, \"bananes\": 6}\n```\nfruit    | quantite | total | manque\navant    |    -     |   0   | []\npommes   |    5     |   5   | []\npoires   |    4     |   9   | ['poires']\nkiwis    |    3     |  12   | ['poires', 'kiwis']\nbananes  |    6     |  18   | ['poires', 'kiwis']\n```\nAffichage :\n```\n{'pommes': 5, 'poires': 4, 'kiwis': 3, 'bananes': 6}\n18 ['poires', 'kiwis']\n```\npommes (5) n'est pas ajouté à manque car 5 < 5 est faux.",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-04",
+      "theme": "python",
+      "competences": [
+        "py-fonctions",
+        "py-boucles",
+        "py-conditions"
+      ],
+      "titre": "Corriger une fonction qui compte",
+      "type": "bug",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 15,
+      "enonce": "La fonction nb_admis doit renvoyer le nombre de notes supérieures ou égales à 10.\nPar exemple nb_admis([12, 8, 10, 15]) doit renvoyer 3.\nElle contient 2 erreurs. Lance les tests, lis les messages, trouve les erreurs et corrige-les.\nPour chaque erreur, écris en une phrase pourquoi c'était faux.",
+      "code": "def nb_admis(notes):\n    # renvoie le nombre de notes >= 10\n    compteur = 0\n    for note in notes:\n        if note > 10:\n            compteur = compteur + 1\n        return compteur",
+      "tests": "assert nb_admis([12, 8, 10, 15]) == 3\nassert nb_admis([5, 6]) == 0\nassert nb_admis([]) == 0\nassert nb_admis([10, 10]) == 2",
+      "indice": "Regarde l'indentation du return : à quel moment la fonction s'arrête-t-elle ? Et que se passe-t-il pour une note égale à 10 ?",
+      "correction": "def nb_admis(notes):\n    # renvoie le nombre de notes >= 10\n    compteur = 0\n    for note in notes:\n        if note >= 10:          # erreur 1 : > excluait les notes égales à 10\n            compteur = compteur + 1\n    return compteur             # erreur 2 : le return était dans la boucle,\n                                # la fonction s'arrêtait dès le premier tour\n                                # (et renvoyait None pour une liste vide)",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-05",
+      "theme": "python",
+      "competences": [
+        "py-syntaxe",
+        "py-conditions"
+      ],
+      "titre": "Corriger des erreurs de syntaxe",
+      "type": "bug",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "La fonction mention doit renvoyer \"très bien\" à partir de 16, \"bien\" à partir de 14, \"assez bien\" à partir de 12, et \"sans mention\" sinon.\nCe code contient 3 erreurs de syntaxe. Python n'en signale qu'une à la fois : lance, lis le numéro de ligne dans le message d'erreur, corrige, relance.",
+      "code": "def mention(note)\n    if note >= 16:\n        return \"très bien\"\n    elif note >= 14:\n    return \"bien\"\n    elif note = 12:\n        return \"assez bien\"\n    else:\n        return \"sans mention\"",
+      "tests": "assert mention(17) == \"très bien\"\nassert mention(14) == \"bien\"\nassert mention(12.5) == \"assez bien\"\nassert mention(12) == \"assez bien\"\nassert mention(9) == \"sans mention\"",
+      "indice": "Vérifie trois choses : chaque ligne def / if / elif se termine par deux-points, ce qui est « dans » un if est décalé de 4 espaces, et = (affecter) n'est pas == ou >= (comparer).",
+      "correction": "def mention(note):              # erreur 1 : il manquait les deux-points\n    if note >= 16:\n        return \"très bien\"\n    elif note >= 14:\n        return \"bien\"           # erreur 2 : le return doit être indenté sous le elif\n    elif note >= 12:            # erreur 3 : = affecte, il faut comparer avec >=\n        return \"assez bien\"\n    else:\n        return \"sans mention\"",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-06",
+      "theme": "python",
+      "competences": [
+        "py-listes-construire",
+        "py-fonctions"
+      ],
+      "titre": "Construire une nouvelle liste",
+      "type": "completer",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Complète les deux fonctions en remplaçant chaque ... :\n- notes_admises(notes) renvoie une NOUVELLE liste contenant les notes >= 10, dans le même ordre. Utilise append.\n- doubles(liste) renvoie la liste des doubles des éléments, écrite par compréhension (entre crochets, en une ligne).\nExemples : notes_admises([12, 8, 15]) renvoie [12, 15] ; doubles([1, 5, 3]) renvoie [2, 10, 6].",
+      "code": "def notes_admises(notes):\n    resultat = ...\n    for note in notes:\n        if ...:\n            ...            # ajouter note à la fin de resultat\n    return resultat\n\n\ndef doubles(liste):\n    return [... for x in liste]",
+      "tests": "assert notes_admises([12, 8, 15]) == [12, 15]\nassert notes_admises([10, 9.5]) == [10]\nassert notes_admises([]) == []\nassert doubles([1, 5, 3]) == [2, 10, 6]\nassert doubles([]) == []",
+      "indice": "On part d'une liste vide [], et liste.append(valeur) ajoute une valeur à la fin. Dans une compréhension, on écrit d'abord ce qu'on met dans la liste, puis for x in liste.",
+      "correction": "def notes_admises(notes):\n    resultat = []                  # on part d'une liste vide\n    for note in notes:\n        if note >= 10:\n            resultat.append(note)  # on ajoute la note à la fin\n    return resultat\n\n\ndef doubles(liste):\n    # pour chaque x de liste, on met 2 * x dans la nouvelle liste\n    return [2 * x for x in liste]",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-07",
+      "theme": "python",
+      "competences": [
+        "py-structures",
+        "py-dict-acces",
+        "py-dict-parcours",
+        "py-assert"
+      ],
+      "titre": "Type bac : prix minimum par catégorie",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 3,
+      "duree": 30,
+      "enonce": "Un magasin range ses produits dans une liste de dictionnaires. Chaque produit a un nom, une catégorie et un prix.\n```\nproduits = [\n    {\"nom\": \"stylo\", \"categorie\": \"papeterie\", \"prix\": 2},\n    {\"nom\": \"clé USB\", \"categorie\": \"informatique\", \"prix\": 8},\n    {\"nom\": \"gomme\", \"categorie\": \"papeterie\", \"prix\": 1},\n    {\"nom\": \"souris\", \"categorie\": \"informatique\", \"prix\": 12},\n    {\"nom\": \"pomme\", \"categorie\": \"alimentation\", \"prix\": 1}\n]\n```\n1. Que vaut produits[1][\"prix\"] ?\n2. Écris la fonction minima(produits) qui renvoie un dictionnaire {catégorie: plus petit prix de la catégorie}. Sur l'exemple : {\"papeterie\": 1, \"informatique\": 8, \"alimentation\": 1}.\n3. Écris deux assert pour tester minima, dont un avec une liste vide.\nFais-le d'abord sur feuille, comme au bac, puis vérifie dans Basthon.",
+      "code": "produits = [\n    {\"nom\": \"stylo\", \"categorie\": \"papeterie\", \"prix\": 2},\n    {\"nom\": \"clé USB\", \"categorie\": \"informatique\", \"prix\": 8},\n    {\"nom\": \"gomme\", \"categorie\": \"papeterie\", \"prix\": 1},\n    {\"nom\": \"souris\", \"categorie\": \"informatique\", \"prix\": 12},\n    {\"nom\": \"pomme\", \"categorie\": \"alimentation\", \"prix\": 1}\n]\n\n\ndef minima(produits):\n    # à compléter\n    pass\n\n\n# Tes deux tests :",
+      "tests": "assert minima(produits) == {\"papeterie\": 1, \"informatique\": 8, \"alimentation\": 1}\nassert minima([]) == {}\nassert minima([{\"nom\": \"a\", \"categorie\": \"x\", \"prix\": 5}, {\"nom\": \"b\", \"categorie\": \"x\", \"prix\": 3}]) == {\"x\": 3}\nassert minima([{\"nom\": \"a\", \"categorie\": \"x\", \"prix\": 3}, {\"nom\": \"b\", \"categorie\": \"x\", \"prix\": 5}]) == {\"x\": 3}",
+      "indice": "Parcours les produits un par un. Pour chaque produit, deux cas : sa catégorie n'est pas encore une clé du dictionnaire (on l'ajoute), ou elle y est déjà (on garde le plus petit des deux prix). Le test « cle not in dico » est utile.",
+      "correction": "# 1. produits[1] est le dictionnaire de la clé USB, donc produits[1][\"prix\"] vaut 8.\n\nproduits = [\n    {\"nom\": \"stylo\", \"categorie\": \"papeterie\", \"prix\": 2},\n    {\"nom\": \"clé USB\", \"categorie\": \"informatique\", \"prix\": 8},\n    {\"nom\": \"gomme\", \"categorie\": \"papeterie\", \"prix\": 1},\n    {\"nom\": \"souris\", \"categorie\": \"informatique\", \"prix\": 12},\n    {\"nom\": \"pomme\", \"categorie\": \"alimentation\", \"prix\": 1}\n]\n\n\n# 2.\ndef minima(produits):\n    mini = {}\n    for p in produits:\n        cat = p[\"categorie\"]\n        if cat not in mini:\n            mini[cat] = p[\"prix\"]        # première fois qu'on voit cette catégorie\n        elif p[\"prix\"] < mini[cat]:\n            mini[cat] = p[\"prix\"]        # on a trouvé moins cher\n    return mini\n\n\n# 3.\nassert minima(produits) == {\"papeterie\": 1, \"informatique\": 8, \"alimentation\": 1}\nassert minima([]) == {}",
+      "base": null,
+      "papier": true
+    },
+    {
+      "id": "py-08",
+      "theme": "python",
+      "competences": [
+        "py-assert",
+        "py-fonctions"
+      ],
+      "titre": "Écrire ses propres tests avec assert",
+      "type": "completer",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "La fonction moyenne est déjà écrite et juste.\n1. Complète est_admis(notes) : elle renvoie True si la moyenne des notes est >= 10, False sinon (une seule ligne suffit, en utilisant moyenne).\n2. Remplace chaque ... des assert par la valeur attendue. Calcule-la de tête AVANT de lancer.\n3. Ajoute un assert de ton choix sur moyenne.\nRappel : si un assert est vrai, rien ne s'affiche ; s'il est faux, Python affiche AssertionError.",
+      "code": "def moyenne(notes):\n    total = 0\n    for note in notes:\n        total = total + note\n    return total / len(notes)\n\n\ndef est_admis(notes):\n    return ...\n\n\nassert moyenne([10, 14]) == ...\nassert moyenne([8, 9, 13]) == ...\nassert est_admis([10, 14]) == ...\nassert est_admis([5, 9]) == ...\n# ton test :",
+      "tests": "assert est_admis([12, 8]) == True\nassert est_admis([9, 10]) == False\nassert est_admis([10]) == True",
+      "indice": "Une comparaison comme a >= 10 vaut déjà True ou False : on peut la renvoyer directement. Pour les moyennes : additionne, puis divise par le nombre de notes.",
+      "correction": "def moyenne(notes):\n    total = 0\n    for note in notes:\n        total = total + note\n    return total / len(notes)\n\n\ndef est_admis(notes):\n    return moyenne(notes) >= 10     # la comparaison vaut True ou False\n\n\nassert moyenne([10, 14]) == 12      # 24 / 2\nassert moyenne([8, 9, 13]) == 10    # 30 / 3\nassert est_admis([10, 14]) == True\nassert est_admis([5, 9]) == False   # moyenne 7\n# ton test (exemple) :\nassert moyenne([15]) == 15",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-09",
+      "theme": "python",
+      "competences": [
+        "py-dict-parcours",
+        "py-listes-construire"
+      ],
+      "titre": "Parcourir un dictionnaire de prix",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Un catalogue est un dictionnaire {article: prix}, par exemple :\n```\ncatalogue = {\"stylo\": 2, \"cahier\": 4, \"agenda\": 9, \"règle\": 1}\n```\n1. Écris prix_total(catalogue) qui renvoie la somme de tous les prix (ici 16), sans utiliser sum.\n2. Écris articles_abordables(catalogue, budget) qui renvoie la liste des articles dont le prix est inférieur ou égal à budget, dans l'ordre du dictionnaire. Ici, avec un budget de 3 : [\"stylo\", \"règle\"].",
+      "code": "catalogue = {\"stylo\": 2, \"cahier\": 4, \"agenda\": 9, \"règle\": 1}\n\n\ndef prix_total(catalogue):\n    # à compléter\n    pass\n\n\ndef articles_abordables(catalogue, budget):\n    # à compléter\n    pass",
+      "tests": "assert prix_total(catalogue) == 16\nassert prix_total({}) == 0\nassert articles_abordables(catalogue, 3) == [\"stylo\", \"règle\"]\nassert articles_abordables(catalogue, 0) == []\nassert articles_abordables(catalogue, 10) == [\"stylo\", \"cahier\", \"agenda\", \"règle\"]",
+      "indice": "for article in catalogue parcourt les clés ; catalogue[article] donne le prix. Tu peux aussi écrire for article, prix in catalogue.items().",
+      "correction": "catalogue = {\"stylo\": 2, \"cahier\": 4, \"agenda\": 9, \"règle\": 1}\n\n\ndef prix_total(catalogue):\n    total = 0\n    for prix in catalogue.values():     # on ne parcourt que les valeurs\n        total = total + prix\n    return total\n\n\ndef articles_abordables(catalogue, budget):\n    resultat = []\n    for article, prix in catalogue.items():\n        if prix <= budget:\n            resultat.append(article)\n    return resultat",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "py-10",
+      "theme": "python",
+      "competences": [
+        "py-dict-acces",
+        "py-dict-parcours",
+        "py-boucles"
+      ],
+      "titre": "Révision : dictionnaire de comptage",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "1. Écris compter(mots) qui renvoie un dictionnaire {mot: nombre d'apparitions dans la liste}.\nExemple : compter([\"chat\", \"chien\", \"chat\"]) renvoie {\"chat\": 2, \"chien\": 1}.\n2. Écris plus_frequent(comptage) qui reçoit un tel dictionnaire (non vide) et renvoie le mot qui apparaît le plus souvent.\nExemple : plus_frequent({\"chat\": 2, \"chien\": 1}) renvoie \"chat\".",
+      "code": "def compter(mots):\n    # à compléter\n    pass\n\n\ndef plus_frequent(comptage):\n    # à compléter\n    pass",
+      "tests": "assert compter([\"chat\", \"chien\", \"chat\"]) == {\"chat\": 2, \"chien\": 1}\nassert compter([]) == {}\nassert compter([\"a\", \"a\", \"a\"]) == {\"a\": 3}\nassert plus_frequent({\"chat\": 2, \"chien\": 1}) == \"chat\"\nassert plus_frequent({\"x\": 1, \"y\": 5, \"z\": 3}) == \"y\"",
+      "indice": "Pour compter : si le mot est déjà une clé, on ajoute 1 à sa valeur ; sinon on crée la clé avec la valeur 1. Pour le plus fréquent : c'est une recherche de maximum, mais sur les valeurs du dictionnaire, en retenant la clé.",
+      "correction": "def compter(mots):\n    comptage = {}\n    for mot in mots:\n        if mot in comptage:\n            comptage[mot] = comptage[mot] + 1\n        else:\n            comptage[mot] = 1       # première apparition\n    return comptage\n\n\ndef plus_frequent(comptage):\n    meilleur = None\n    for mot, nb in comptage.items():\n        if meilleur is None or nb > comptage[meilleur]:\n            meilleur = mot\n    return meilleur",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "bdd-01",
+      "theme": "bdd",
+      "competences": [
+        "bdd-modele",
+        "bdd-cles",
+        "bdd-schema",
+        "bdd-contraintes"
+      ],
+      "titre": "Schéma relationnel de la bibliothèque",
+      "type": "papier",
+      "langage": "texte",
+      "difficulte": 1,
+      "duree": 20,
+      "enonce": "On utilise la base Bibliothèque :\n```\nAdherent(id_adherent, nom, prenom, ville)\nLivre(id_livre, titre, auteur, annee, genre)\nEmprunt(id_emprunt, #id_adherent, #id_livre, date_emprunt, date_retour)\n```\nDans la base, les adhérents ont les identifiants 1 à 8, les livres 1 à 12, les emprunts 1 à 14.\nRéponds sur ta feuille.\n1. Combien de relations compte ce schéma ? Combien d'attributs a la relation Livre ?\n2. Donne un domaine (type) possible pour chaque attribut de Livre.\n3. Donne la clé primaire de chaque relation.\n4. Quelles sont les clés étrangères de Emprunt ? Vers quelle relation pointe chacune ?\n5. Pour chaque requête, dis si elle est acceptée ou refusée, et si elle est refusée, quelle contrainte est violée (entité, référence ou domaine) :\n- a. INSERT INTO Adherent VALUES (3, 'Dupont', 'Léa', 'Nice');\n- b. INSERT INTO Emprunt VALUES (15, 12, 5, '2026-11-15', NULL);\n- c. INSERT INTO Livre VALUES (13, 'Germinal', 'Émile Zola', 'mille huit cent', 'roman');\n- d. INSERT INTO Emprunt VALUES (15, 2, 8, '2026-11-15', NULL);\n- e. DELETE FROM Adherent WHERE id_adherent = 1;\n6. La bibliothèque veut que les adhérents donnent une note de 0 à 5 aux livres. Écris le schéma d'une relation Avis (clé primaire soulignée ou en premier, clés étrangères précédées de #) et précise le domaine de la note.",
+      "code": "",
+      "tests": "",
+      "indice": "Une clé primaire identifie chaque ligne : deux lignes ne peuvent pas avoir la même. Une clé étrangère doit toujours désigner une ligne qui existe dans l'autre relation.",
+      "correction": "1. Trois relations : Adherent, Livre et Emprunt. Livre a 5 attributs : id_livre, titre, auteur, annee, genre.\n2. id_livre : entier ; titre : texte ; auteur : texte ; annee : entier ; genre : texte.\n3. Adherent : id_adherent ; Livre : id_livre ; Emprunt : id_emprunt.\n4. id_adherent fait référence à Adherent(id_adherent) et id_livre fait référence à Livre(id_livre).\n5.\n- a. Refusée : l'identifiant 3 existe déjà. Contrainte d'entité (la clé primaire doit être unique).\n- b. Refusée : l'adhérent 12 n'existe pas. Contrainte de référence.\n- c. Refusée : annee doit être un entier, pas un texte. Contrainte de domaine. (Remarque : SQLite, utilisé par Basthon, est très tolérant sur les types et l'accepterait quand même, mais au bac la réponse attendue est « refusée ».)\n- d. Acceptée : l'emprunt 15 n'existe pas encore, l'adhérent 2 et le livre 8 existent.\n- e. Refusée : l'adhérent 1 a des emprunts, ces lignes de Emprunt feraient référence à un adhérent qui n'existe plus. Contrainte de référence.\n6. Avis(id_avis, #id_adherent, #id_livre, note) avec id_avis clé primaire, id_adherent clé étrangère vers Adherent, id_livre clé étrangère vers Livre, et note un entier compris entre 0 et 5.",
+      "base": null,
+      "papier": true
+    },
+    {
+      "id": "sql-01",
+      "theme": "sql",
+      "competences": [
+        "sql-select"
+      ],
+      "titre": "Premières requêtes : SELECT et WHERE",
+      "type": "sql",
+      "langage": "sql",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "Écris une requête pour chaque question, puis exécute-la pour vérifier.\nLes textes s'écrivent entre apostrophes, exactement comme dans la base : 'Lyon', 'roman'.\n1. Le titre et l'auteur de tous les livres.\n2. Le nom et le prénom des adhérents qui habitent à Lyon.\n3. Le titre des livres publiés avant 1900.\n4. Le titre des romans (genre 'roman') écrits par 'Victor Hugo'.\n5. Le numéro des emprunts qui ne sont pas encore rendus. Un emprunt non rendu a une date_retour vide : on teste cela avec date_retour IS NULL (et non = NULL).",
+      "code": "-- 1. Titre et auteur de tous les livres\n\n\n-- 2. Adhérents de Lyon\n\n\n-- 3. Livres publiés avant 1900\n\n\n-- 4. Romans de Victor Hugo\n\n\n-- 5. Emprunts non rendus",
+      "tests": "",
+      "indice": "Une requête a toujours la forme SELECT colonnes FROM table WHERE condition; Pour deux conditions à la fois, on les relie par AND.",
+      "correction": "-- 1.\nSELECT titre, auteur FROM Livre;\n-- 2.\nSELECT nom, prenom FROM Adherent WHERE ville = 'Lyon';\n-- 3.\nSELECT titre FROM Livre WHERE annee < 1900;\n-- 4.\nSELECT titre FROM Livre WHERE genre = 'roman' AND auteur = 'Victor Hugo';\n-- 5. (on trouve les emprunts 4, 7, 10 et 14)\nSELECT id_emprunt FROM Emprunt WHERE date_retour IS NULL;",
+      "base": "bibliotheque",
+      "papier": false
+    },
+    {
+      "id": "sql-02",
+      "theme": "sql",
+      "competences": [
+        "sql-tri",
+        "sql-select"
+      ],
+      "titre": "Trier et supprimer les doublons",
+      "type": "sql",
+      "langage": "sql",
+      "difficulte": 1,
+      "duree": 15,
+      "enonce": "Écris une requête pour chaque question, puis exécute-la.\n1. Le titre et l'année de tous les livres, du plus ancien au plus récent.\n2. La liste des villes où habitent les adhérents, chaque ville une seule fois.\n3. La liste des genres de livres, sans doublon, par ordre alphabétique.\n4. Le nom et le prénom des adhérents, triés par nom de Z à A.\n5. Le titre et l'année des livres de genre 'bd' ou 'science-fiction', du plus récent au plus ancien.",
+      "code": "-- 1. Livres du plus ancien au plus récent\n\n\n-- 2. Villes sans doublon\n\n\n-- 3. Genres sans doublon, triés\n\n\n-- 4. Adhérents triés par nom de Z à A\n\n\n-- 5. BD et science-fiction, du plus récent au plus ancien",
+      "tests": "",
+      "indice": "ORDER BY colonne trie par ordre croissant ; ajoute DESC pour l'ordre décroissant. SELECT DISTINCT colonne enlève les doublons. ORDER BY se place tout à la fin de la requête.",
+      "correction": "-- 1.\nSELECT titre, annee FROM Livre ORDER BY annee;\n-- 2.\nSELECT DISTINCT ville FROM Adherent;\n-- 3.\nSELECT DISTINCT genre FROM Livre ORDER BY genre;\n-- 4.\nSELECT nom, prenom FROM Adherent ORDER BY nom DESC;\n-- 5. (OR : l'une ou l'autre des conditions)\nSELECT titre, annee FROM Livre WHERE genre = 'bd' OR genre = 'science-fiction' ORDER BY annee DESC;",
+      "base": "bibliotheque",
+      "papier": false
+    },
+    {
+      "id": "sql-03",
+      "theme": "sql",
+      "competences": [
+        "sql-agregats",
+        "sql-jointure"
+      ],
+      "titre": "Compter et relier les tables",
+      "type": "sql",
+      "langage": "sql",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Écris une requête pour chaque question, puis exécute-la.\n1. Le nombre de livres de la bibliothèque.\n2. L'année du livre le plus ancien et celle du plus récent (une seule requête).\n3. Le nombre d'emprunts qui ne sont pas encore rendus.\n4. Le titre des livres empruntés par l'adhérent numéro 3. Il faut relier Emprunt et Livre avec une jointure.\n5. Le nom, le prénom et le titre du livre pour chaque emprunt non rendu. Il faut cette fois relier trois tables.",
+      "code": "-- 1. Nombre de livres\n\n\n-- 2. Année la plus ancienne et la plus récente\n\n\n-- 3. Nombre d'emprunts non rendus\n\n\n-- 4. Livres empruntés par l'adhérent 3\n\n\n-- 5. Qui a quel livre non rendu ?",
+      "tests": "",
+      "indice": "COUNT(*), MIN(colonne), MAX(colonne) se mettent après SELECT. Pour une jointure : FROM Emprunt JOIN Livre ON Emprunt.id_livre = Livre.id_livre, c'est-à-dire qu'on relie la clé étrangère à la clé primaire qu'elle désigne.",
+      "correction": "-- 1. (12 livres)\nSELECT COUNT(*) FROM Livre;\n-- 2. (1831 et 2000)\nSELECT MIN(annee), MAX(annee) FROM Livre;\n-- 3. (4 emprunts)\nSELECT COUNT(*) FROM Emprunt WHERE date_retour IS NULL;\n-- 4. (Le Petit Prince, Une si longue lettre, Les Misérables)\nSELECT Livre.titre FROM Emprunt JOIN Livre ON Emprunt.id_livre = Livre.id_livre WHERE Emprunt.id_adherent = 3;\n-- 5. (deux jointures : Emprunt avec Adherent, puis avec Livre)\nSELECT Adherent.nom, Adherent.prenom, Livre.titre FROM Emprunt JOIN Adherent ON Emprunt.id_adherent = Adherent.id_adherent JOIN Livre ON Emprunt.id_livre = Livre.id_livre WHERE Emprunt.date_retour IS NULL;",
+      "base": "bibliotheque",
+      "papier": false
+    },
+    {
+      "id": "sql-04",
+      "theme": "sql",
+      "competences": [
+        "sql-modif"
+      ],
+      "titre": "Modifier la base : INSERT, UPDATE, DELETE",
+      "type": "sql",
+      "langage": "sql",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Écris une requête pour chaque question et exécute-les dans l'ordre. Si tu te trompes, recharge la base et recommence.\n1. Une nouvelle adhérente s'inscrit : numéro 9, Awa Koné, qui habite à Lille.\n2. La bibliothèque achète le livre numéro 13 : « Les Contemplations », de Victor Hugo, publié en 1856, genre 'poésie'.\n3. Awa emprunte ce livre le 10 novembre 2026 (date '2026-11-10') : c'est l'emprunt numéro 15, pas encore rendu. Vérifie ensuite avec un SELECT sur les emprunts non rendus.\n4. Lucas Martin rend le livre de l'emprunt numéro 4 le '2026-11-12'.\n5. Le livre numéro 12 (Bel-Ami), jamais emprunté, est retiré de la bibliothèque. Pourquoi ne pourrait-on pas supprimer de la même façon le livre numéro 1 ?",
+      "code": "-- 1. Nouvelle adhérente\n\n\n-- 2. Nouveau livre\n\n\n-- 3. Nouvel emprunt, puis vérification\n\n\n-- 4. Retour du livre de l'emprunt 4\n\n\n-- 5. Retrait du livre 12",
+      "tests": "",
+      "indice": "INSERT INTO Table VALUES (...); dans l'ordre des attributs du schéma. UPDATE Table SET colonne = valeur WHERE ...; et DELETE FROM Table WHERE ...; Sans WHERE, la modification touche TOUTES les lignes ! Pour un emprunt, l'adhérent et le livre doivent exister avant.",
+      "correction": "-- 1.\nINSERT INTO Adherent VALUES (9, 'Koné', 'Awa', 'Lille');\n-- 2.\nINSERT INTO Livre VALUES (13, 'Les Contemplations', 'Victor Hugo', 1856, 'poésie');\n-- 3. (possible seulement après 1 et 2, à cause des clés étrangères)\nINSERT INTO Emprunt VALUES (15, 9, 13, '2026-11-10', NULL);\nSELECT * FROM Emprunt WHERE date_retour IS NULL;\n-- 4.\nUPDATE Emprunt SET date_retour = '2026-11-12' WHERE id_emprunt = 4;\n-- 5. Le livre 1 apparaît dans des emprunts (1 et 7) : le supprimer violerait la contrainte de référence, la requête serait refusée.\nDELETE FROM Livre WHERE id_livre = 12;",
+      "base": "bibliotheque",
+      "papier": false
+    },
+    {
+      "id": "algo-01",
+      "theme": "algo",
+      "competences": [
+        "algo-parcours"
+      ],
+      "titre": "Parcours : chercher et compter",
+      "type": "completer",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "Complète les deux fonctions en remplaçant chaque ... :\n- appartient(liste, x) renvoie True si x est dans la liste, False sinon (sans utiliser le mot-clé in sur la liste, mais avec une boucle).\n- compter(liste, x) renvoie le nombre de fois où x apparaît dans la liste.",
+      "code": "def appartient(liste, x):\n    for element in liste:\n        if ...:\n            return True\n    return ...\n\n\ndef compter(liste, x):\n    nb = 0\n    for element in liste:\n        if element == x:\n            nb = ...\n    return nb",
+      "tests": "assert appartient([3, 8, 1], 8) == True\nassert appartient([3, 8, 1], 5) == False\nassert appartient([], 5) == False\nassert compter([2, 7, 2, 2], 2) == 3\nassert compter([2, 7, 2, 2], 4) == 0",
+      "indice": "Dans appartient, on ne peut répondre False qu'après avoir regardé TOUS les éléments : où se trouve cette ligne par rapport à la boucle ?",
+      "correction": "def appartient(liste, x):\n    for element in liste:\n        if element == x:\n            return True      # trouvé : inutile de continuer\n    return False             # on a tout parcouru sans trouver\n\n\ndef compter(liste, x):\n    nb = 0\n    for element in liste:\n        if element == x:\n            nb = nb + 1\n    return nb",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "algo-02",
+      "theme": "algo",
+      "competences": [
+        "algo-extremum"
+      ],
+      "titre": "Maximum et moyenne d'une liste",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 15,
+      "enonce": "Sans utiliser max ni sum :\n1. Écris maximum(liste) qui renvoie le plus grand élément d'une liste non vide.\n2. Écris moyenne(liste) qui renvoie la moyenne des éléments d'une liste non vide.\nExemples : maximum([4, 11, 7]) renvoie 11 ; moyenne([10, 12, 14]) renvoie 12.",
+      "code": "def maximum(liste):\n    # à compléter\n    pass\n\n\ndef moyenne(liste):\n    # à compléter\n    pass",
+      "tests": "assert maximum([4, 11, 7]) == 11\nassert maximum([-5, -2, -9]) == -2\nassert maximum([3]) == 3\nassert moyenne([10, 12, 14]) == 12\nassert moyenne([1, 2]) == 1.5",
+      "indice": "Pour le maximum, commence avec le premier élément comme « meilleur candidat », puis compare-le à chacun des autres. Pourquoi commencer à 0 serait faux avec [-5, -2, -9] ?",
+      "correction": "def maximum(liste):\n    maxi = liste[0]              # premier candidat\n    for element in liste:\n        if element > maxi:\n            maxi = element       # on a trouvé plus grand\n    return maxi\n\n\ndef moyenne(liste):\n    total = 0\n    for element in liste:\n        total = total + element\n    return total / len(liste)",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "algo-03",
+      "theme": "algo",
+      "competences": [
+        "algo-complexite"
+      ],
+      "titre": "Compter les opérations : O(n) ou O(n²) ?",
+      "type": "lire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Les deux fonctions comptent combien de fois l'instruction compteur = compteur + 1 est exécutée.\n1. Sans exécuter, écris ce qu'affichent les deux print. Vérifie ensuite dans Basthon.\n2. Quand n est multiplié par 2, par combien est multiplié le résultat de compte_simple ? Et celui de compte_double ?\n3. Donne la complexité de chaque fonction : O(n) ou O(n²) ?\n4. Associe chaque action à sa complexité, O(1), O(log n), O(n) ou O(n²) : lire liste[3] ; chercher un élément dans une liste non triée ; recherche dichotomique dans une liste triée ; tri par sélection.",
+      "code": "def compte_simple(n):\n    compteur = 0\n    for i in range(n):\n        compteur = compteur + 1\n    return compteur\n\n\ndef compte_double(n):\n    compteur = 0\n    for i in range(n):\n        for j in range(n):\n            compteur = compteur + 1\n    return compteur\n\n\nprint(compte_simple(4), compte_double(4))\nprint(compte_simple(8), compte_double(8))",
+      "tests": "",
+      "indice": "Dans compte_double, pour CHAQUE valeur de i, la boucle sur j fait n tours complets.",
+      "correction": "1. Affichage :\n```\n4 16\n8 64\n```\n2. compte_simple : 4 devient 8, le résultat est multiplié par 2. compte_double : 16 devient 64, le résultat est multiplié par 4 (= 2 × 2).\n3. compte_simple fait n opérations : O(n), complexité linéaire. compte_double fait n × n = n² opérations : O(n²), complexité quadratique.\n4. liste[3] : O(1) (accès direct, quelle que soit la taille) ; recherche dans une liste non triée : O(n) ; dichotomie : O(log n) (on divise la zone par 2 à chaque tour) ; tri par sélection : O(n²) (deux boucles imbriquées).",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "algo-04",
+      "theme": "algo",
+      "competences": [
+        "algo-tri",
+        "algo-complexite"
+      ],
+      "titre": "Compléter le tri par insertion",
+      "type": "completer",
+      "langage": "python",
+      "difficulte": 3,
+      "duree": 20,
+      "enonce": "Attention : ce code contient une boucle while. Si sa condition ne devient jamais fausse, la boucle tourne à l'infini et la page Basthon se bloque. Enregistre (ou copie) ton code avant de lancer ; si la page ne répond plus, recharge-la.\n\nLe tri par insertion trie la liste sur place : on prend chaque élément à partir du deuxième et on le fait reculer tant que l'élément à sa gauche est plus grand.\n1. Complète les ... de tri_insertion.\n2. Sur ta feuille, écris l'état de la liste [5, 2, 4, 1] après chaque tour de la boucle for.\n3. Pour une liste de n éléments triée à l'envers, combien de décalages fait-on au total ? Quelle est la complexité dans ce pire cas ?",
+      "code": "def tri_insertion(liste):\n    for i in range(1, len(liste)):\n        valeur = liste[i]\n        j = i - 1\n        while j >= 0 and ...:        # tant que l'élément de gauche est plus grand\n            liste[j + 1] = liste[j]  # on le décale d'une case vers la droite\n            j = j - 1\n        liste[j + 1] = ...           # on pose valeur à sa place",
+      "tests": "l = [5, 2, 4, 1]\ntri_insertion(l)\nassert l == [1, 2, 4, 5]\nl = [3, 1, 2, 3]\ntri_insertion(l)\nassert l == [1, 2, 3, 3]\nl = []\ntri_insertion(l)\nassert l == []\nl = [7]\ntri_insertion(l)\nassert l == [7]",
+      "indice": "L'élément « de gauche » est liste[j]. La ligne j = j - 1 est indispensable : c'est elle qui fait avancer la boucle while vers sa fin.",
+      "correction": "# 1.\ndef tri_insertion(liste):\n    for i in range(1, len(liste)):\n        valeur = liste[i]\n        j = i - 1\n        while j >= 0 and liste[j] > valeur:\n            liste[j + 1] = liste[j]\n            j = j - 1\n        liste[j + 1] = valeur\n\n# 2. [5, 2, 4, 1] -> i=1 : [2, 5, 4, 1] -> i=2 : [2, 4, 5, 1] -> i=3 : [1, 2, 4, 5]\n# 3. L'élément d'indice i recule de i cases : 1 + 2 + ... + (n - 1) = n(n - 1) / 2\n#    décalages, donc de l'ordre de n² : complexité O(n²) dans le pire cas.",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "hash-01",
+      "theme": "hash",
+      "competences": [
+        "hash-ascii",
+        "hash-modulo",
+        "hash-collisions"
+      ],
+      "titre": "Calculer des hachés à la main",
+      "type": "papier",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "Sans calculatrice, sur ta feuille. Codes ASCII utiles : A=65, B=66, C=67, D=68 (chaque lettre suivante vaut 1 de plus) ; I=73, M=77, N=78, S=83.\n1. Que valent ord(\"C\") et chr(68) ?\n2. Calcule 17 % 5, 23 % 10 et 198 % 7 (% donne le reste de la division entière).\n3. La fonction de hachage h calcule la somme des codes ASCII des lettres d'un mot, puis le reste de sa division par 10. Calcule h(\"NSI\"), h(\"AMI\") et h(\"BAC\").\n4. Calcule h(\"CAB\"). Que remarques-tu ? Comment s'appelle ce phénomène ?\n5. Dessine une table de 10 cases numérotées de 0 à 9 et range les quatre mots dans la case de leur haché.\nEnsuite, lance le code pour vérifier tes calculs.",
+      "code": "# Vérifie tes réponses APRÈS les avoir écrites sur ta feuille.\ndef h(mot, taille):\n    somme = 0\n    for lettre in mot:\n        somme = somme + ord(lettre)\n    return somme % taille\n\n\nprint(ord(\"C\"), chr(68))\nprint(17 % 5, 23 % 10, 198 % 7)\nfor mot in [\"NSI\", \"AMI\", \"BAC\", \"CAB\"]:\n    print(mot, h(mot, 10))",
+      "tests": "",
+      "indice": "Le reste d'une division par 10, c'est le chiffre des unités. Pour 198 % 7, cherche le plus grand multiple de 7 inférieur ou égal à 198.",
+      "correction": "1. ord(\"C\") = 67 et chr(68) = \"D\".\n2. 17 % 5 = 2 (17 = 5 × 3 + 2) ; 23 % 10 = 3 ; 198 % 7 = 2 (7 × 28 = 196 et 198 - 196 = 2).\n3. NSI : 78 + 83 + 73 = 234, h = 4. AMI : 65 + 77 + 73 = 215, h = 5. BAC : 66 + 65 + 67 = 198, h = 8.\n4. CAB : 67 + 65 + 66 = 198, h = 8, comme BAC. Deux mots différents ont le même haché : c'est une collision. Avec cette fonction, deux mots écrits avec les mêmes lettres (anagrammes) ont toujours le même haché.\n5. Case 4 : NSI ; case 5 : AMI ; case 8 : BAC et CAB ; les autres cases sont vides.",
+      "base": null,
+      "papier": true
+    },
+    {
+      "id": "hash-02",
+      "theme": "hash",
+      "competences": [
+        "hash-table",
+        "hash-collisions",
+        "hash-modulo"
+      ],
+      "titre": "Une table de hachage avec des listes",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 15,
+      "enonce": "Une table de hachage est ici une liste de cases, chaque case étant une liste de mots. Plusieurs mots peuvent tomber dans la même case (collision) : on les met tous dans la liste de cette case.\n1. Écris hachage(mot, taille) : somme des codes ASCII des lettres (avec ord), modulo taille.\n2. Écris ajouter(table, mot) : ajoute mot à la fin de la case d'indice hachage(mot, len(table)).\n3. Écris rechercher(table, mot) : renvoie True si mot est dans la table, en ne regardant QUE la case de son haché.\nLa fonction creer_table est donnée.",
+      "code": "def creer_table(taille):\n    return [[] for i in range(taille)]\n\n\ndef hachage(mot, taille):\n    # à compléter\n    pass\n\n\ndef ajouter(table, mot):\n    # à compléter\n    pass\n\n\ndef rechercher(table, mot):\n    # à compléter\n    pass",
+      "tests": "assert hachage(\"A\", 7) == 2\nassert hachage(\"BAC\", 7) == 2\nassert hachage(\"NSI\", 7) == 3\nt = creer_table(7)\najouter(t, \"BAC\")\najouter(t, \"CAB\")\najouter(t, \"NSI\")\nassert t[2] == [\"BAC\", \"CAB\"]\nassert t[3] == [\"NSI\"]\nassert rechercher(t, \"CAB\") == True\nassert rechercher(t, \"ABC\") == False\nassert rechercher(t, \"AMI\") == False",
+      "indice": "Pour ajouter : calcule d'abord l'indice de la case, puis fais un append sur table[indice]. Pour rechercher : même calcul d'indice, puis regarde si le mot est dans cette case avec in.",
+      "correction": "def creer_table(taille):\n    return [[] for i in range(taille)]\n\n\ndef hachage(mot, taille):\n    somme = 0\n    for lettre in mot:\n        somme = somme + ord(lettre)\n    return somme % taille\n\n\ndef ajouter(table, mot):\n    indice = hachage(mot, len(table))\n    table[indice].append(mot)       # en cas de collision, la case contient plusieurs mots\n\n\ndef rechercher(table, mot):\n    indice = hachage(mot, len(table))\n    return mot in table[indice]     # une seule case à regarder : c'est rapide",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "hash-03",
+      "theme": "hash",
+      "competences": [
+        "hash-table",
+        "hash-collisions"
+      ],
+      "titre": "Type bac : ranger des mots sans doublon",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 3,
+      "duree": 30,
+      "enonce": "On range des mots dans une table de hachage (liste de listes), sans jamais mettre deux fois le même mot. Les fonctions creer_table et hachage sont données (somme des codes ASCII modulo taille).\nCodes utiles : A=65, B=66, C=67, I=73, M=77, N=78, S=83.\n1. Sur ta feuille, avec une table de taille 5, range à la main les mots \"NSI\", \"BAC\", \"AMI\", \"NSI\", \"CAB\" dans cet ordre, sans doublon. Dessine la table finale.\n2. Écris ajouter_sans_doublon(table, mot) : si mot n'est pas déjà dans sa case, l'ajoute et renvoie True ; sinon ne fait rien et renvoie False.\n3. Écris ranger(mots, taille) : crée une table de cette taille, y range tous les mots de la liste sans doublon, et renvoie la table.\n4. Pourquoi suffit-il de regarder une seule case pour savoir si un mot est déjà rangé ?\nFais-le d'abord sur feuille, puis vérifie dans Basthon.",
+      "code": "def creer_table(taille):\n    return [[] for i in range(taille)]\n\n\ndef hachage(mot, taille):\n    somme = 0\n    for lettre in mot:\n        somme = somme + ord(lettre)\n    return somme % taille\n\n\ndef ajouter_sans_doublon(table, mot):\n    # à compléter\n    pass\n\n\ndef ranger(mots, taille):\n    # à compléter\n    pass",
+      "tests": "t = creer_table(5)\nassert ajouter_sans_doublon(t, \"NSI\") == True\nassert ajouter_sans_doublon(t, \"NSI\") == False\nassert t[4] == [\"NSI\"]\nassert ranger([\"NSI\", \"BAC\", \"AMI\", \"NSI\", \"CAB\"], 5) == [[\"AMI\"], [], [], [\"BAC\", \"CAB\"], [\"NSI\"]]\nassert ranger([], 3) == [[], [], []]\nassert ranger([\"BAC\", \"BAC\", \"BAC\"], 2) == [[\"BAC\"], []]",
+      "indice": "Dans ajouter_sans_doublon, la case à examiner est table[hachage(mot, len(table))]. Dans ranger, tu peux appeler ajouter_sans_doublon pour chaque mot, sans te servir de ce qu'elle renvoie.",
+      "correction": "# 1. NSI : 234 % 5 = 4 ; BAC : 198 % 5 = 3 ; AMI : 215 % 5 = 0 ; NSI : déjà en case 4, ignoré ;\n#    CAB : 198 % 5 = 3, collision avec BAC, on l'ajoute dans la même case.\n#    Table : [[\"AMI\"], [], [], [\"BAC\", \"CAB\"], [\"NSI\"]]\n\ndef creer_table(taille):\n    return [[] for i in range(taille)]\n\n\ndef hachage(mot, taille):\n    somme = 0\n    for lettre in mot:\n        somme = somme + ord(lettre)\n    return somme % taille\n\n\n# 2.\ndef ajouter_sans_doublon(table, mot):\n    case = table[hachage(mot, len(table))]\n    if mot in case:\n        return False          # déjà présent : on ne l'ajoute pas\n    case.append(mot)\n    return True\n\n\n# 3.\ndef ranger(mots, taille):\n    table = creer_table(taille)\n    for mot in mots:\n        ajouter_sans_doublon(table, mot)\n    return table\n\n# 4. Un même mot a toujours le même haché : s'il est déjà rangé, il est forcément\n#    dans la case de son haché. Inutile de regarder les autres cases.",
+      "base": null,
+      "papier": true
+    },
+    {
+      "id": "rec-01",
+      "theme": "rec",
+      "competences": [
+        "rec-trace",
+        "rec-principe"
+      ],
+      "titre": "Suivre les appels d'une fonction récursive",
+      "type": "trace",
+      "langage": "python",
+      "difficulte": 1,
+      "duree": 10,
+      "enonce": "Lis la fonction somme. Sur ta feuille :\n1. Repère le cas de base et l'appel récursif.\n2. Écris la liste des appels déclenchés par somme(4), comme ceci :\n```\nsomme(4) = 4 + somme(3)\nsomme(3) = ...\n```\njusqu'au cas de base, puis remonte en calculant chaque résultat.\n3. Que se passerait-il avec somme(-1) ?\nVérifie ensuite dans Basthon.",
+      "code": "def somme(n):\n    if n == 0:\n        return 0\n    return n + somme(n - 1)\n\n\nprint(somme(4))",
+      "tests": "",
+      "indice": "Chaque appel attend le résultat de l'appel suivant avant de pouvoir finir son addition. On descend jusqu'à somme(0), puis on remonte.",
+      "correction": "1. Cas de base : n == 0, on renvoie 0 sans appel. Appel récursif : somme(n - 1), avec un n plus petit.\n2. Descente puis remontée :\n```\nsomme(4) = 4 + somme(3)          = 4 + 6 = 10\n  somme(3) = 3 + somme(2)        = 3 + 3 = 6\n    somme(2) = 2 + somme(1)      = 2 + 1 = 3\n      somme(1) = 1 + somme(0)    = 1 + 0 = 1\n        somme(0) = 0             (cas de base)\n```\nAffichage : 10\n3. somme(-1) appelle somme(-2), puis somme(-3)… sans jamais atteindre 0 : Python s'arrête avec une erreur RecursionError (trop d'appels imbriqués).",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "rec-02",
+      "theme": "rec",
+      "competences": [
+        "rec-principe"
+      ],
+      "titre": "Écrire des fonctions récursives",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 20,
+      "enonce": "Écris ces deux fonctions de façon récursive (la fonction s'appelle elle-même), sans boucle et sans utiliser ** :\n1. puissance(x, n) renvoie x à la puissance n, pour n entier positif ou nul. On utilise x⁰ = 1 et xⁿ = x × xⁿ⁻¹.\n2. nb_chiffres(n) renvoie le nombre de chiffres d'un entier positif n. Par exemple nb_chiffres(2026) renvoie 4.\nPour chacune, commence par écrire le cas de base.",
+      "code": "def puissance(x, n):\n    # à compléter\n    pass\n\n\ndef nb_chiffres(n):\n    # à compléter\n    pass",
+      "tests": "assert puissance(2, 10) == 1024\nassert puissance(5, 0) == 1\nassert puissance(3, 3) == 27\nassert nb_chiffres(7) == 1\nassert nb_chiffres(10) == 2\nassert nb_chiffres(2026) == 4",
+      "indice": "Pour nb_chiffres : n // 10 enlève le dernier chiffre (2026 // 10 = 202). Un nombre plus petit que 10 a un seul chiffre.",
+      "correction": "def puissance(x, n):\n    if n == 0:\n        return 1                        # cas de base\n    return x * puissance(x, n - 1)      # n diminue à chaque appel\n\n\ndef nb_chiffres(n):\n    if n < 10:\n        return 1                        # cas de base : un seul chiffre\n    return 1 + nb_chiffres(n // 10)     # on enlève le dernier chiffre",
+      "base": null,
+      "papier": false
+    },
+    {
+      "id": "rec-03",
+      "theme": "rec",
+      "competences": [
+        "rec-dichotomie",
+        "rec-dicho-bornes"
+      ],
+      "titre": "Type bac : dichotomie sur [debut, fin[",
+      "type": "ecrire",
+      "langage": "python",
+      "difficulte": 3,
+      "duree": 20,
+      "enonce": "Attention : ce code contient une boucle while. Si sa condition ne devient jamais fausse, la boucle tourne à l'infini et la page Basthon se bloque. Enregistre (ou copie) ton code avant de lancer ; si la page ne répond plus, recharge-la.\n\nOn cherche x dans une liste TRIÉE. On garde deux bornes : debut (inclus) et fin (exclue). La zone de recherche est donc liste[debut], …, liste[fin - 1], et elle est vide quand debut >= fin.\n1. Sur ta feuille, avec liste = [2, 5, 8, 12, 16, 23, 38], déroule la recherche de 23 puis celle de 7 dans un tableau debut | fin | milieu | liste[milieu].\n2. Écris dichotomie(liste, x) qui renvoie l'indice de x dans la liste, ou -1 si x est absent. On commence avec debut = 0 et fin = len(liste), et milieu = (debut + fin) // 2.\n3. Écris des assert pour les cas particuliers : liste vide, élément absent, premier élément, dernier élément.\nFais-le d'abord sur feuille, puis vérifie dans Basthon.",
+      "code": "def dichotomie(liste, x):\n    # à compléter\n    pass\n\n\n# Tes tests (cas particuliers) :",
+      "tests": "L = [2, 5, 8, 12, 16, 23, 38]\nassert dichotomie(L, 23) == 5\nassert dichotomie(L, 12) == 3\nassert dichotomie(L, 2) == 0\nassert dichotomie(L, 38) == 6\nassert dichotomie(L, 7) == -1\nassert dichotomie(L, 50) == -1\nassert dichotomie(L, 1) == -1\nassert dichotomie([], 4) == -1\nassert dichotomie([9], 9) == 0",
+      "indice": "Si liste[milieu] est trop petit, x est à droite : debut = milieu + 1. S'il est trop grand, x est à gauche : fin = milieu (pas milieu - 1, car fin est exclue). La boucle continue tant que debut < fin.",
+      "correction": "# 1. Recherche de 23 :\n#    debut=0 fin=7 milieu=3 liste[3]=12 < 23 -> debut = 4\n#    debut=4 fin=7 milieu=5 liste[5]=23 trouvé -> renvoie 5\n#    Recherche de 7 :\n#    debut=0 fin=7 milieu=3 liste[3]=12 > 7 -> fin = 3\n#    debut=0 fin=3 milieu=1 liste[1]=5  < 7 -> debut = 2\n#    debut=2 fin=3 milieu=2 liste[2]=8  > 7 -> fin = 2\n#    debut=2 fin=2 : zone vide, on s'arrête -> renvoie -1\n\n# 2.\ndef dichotomie(liste, x):\n    debut = 0\n    fin = len(liste)               # fin exclue\n    while debut < fin:             # tant que la zone n'est pas vide\n        milieu = (debut + fin) // 2\n        if liste[milieu] == x:\n            return milieu\n        elif liste[milieu] < x:\n            debut = milieu + 1     # x est à droite de milieu\n        else:\n            fin = milieu           # x est à gauche ; milieu est exclu\n    return -1\n\n\n# 3.\nassert dichotomie([], 4) == -1                       # liste vide : on n'entre pas dans la boucle\nassert dichotomie([2, 5, 8, 12], 7) == -1            # absent\nassert dichotomie([2, 5, 8, 12], 2) == 0             # premier élément\nassert dichotomie([2, 5, 8, 12], 12) == 3            # dernier élément",
+      "base": null,
+      "papier": true
+    },
+    {
+      "id": "rec-04",
+      "theme": "rec",
+      "competences": [
+        "rec-principe",
+        "rec-dichotomie"
+      ],
+      "titre": "Compléter une dichotomie récursive",
+      "type": "completer",
+      "langage": "python",
+      "difficulte": 2,
+      "duree": 15,
+      "enonce": "Voici la même recherche dichotomique, écrite cette fois de façon récursive. dicho_rec cherche x entre les indices debut (inclus) et fin (exclue).\n1. Complète les ... : la condition du cas de base, puis les bornes des deux appels récursifs.\n2. La fonction recherche lance le premier appel : quelles valeurs donne-t-elle à debut et fin ?",
+      "code": "def dicho_rec(liste, x, debut, fin):\n    if ...:                       # cas de base : la zone de recherche est vide\n        return -1\n    milieu = (debut + fin) // 2\n    if liste[milieu] == x:\n        return milieu\n    elif liste[milieu] < x:\n        return dicho_rec(liste, x, ..., ...)    # chercher à droite\n    else:\n        return dicho_rec(liste, x, ..., ...)    # chercher à gauche\n\n\ndef recherche(liste, x):\n    return dicho_rec(liste, x, 0, len(liste))",
+      "tests": "L = [2, 5, 8, 12, 16, 23, 38]\nassert recherche(L, 23) == 5\nassert recherche(L, 2) == 0\nassert recherche(L, 38) == 6\nassert recherche(L, 12) == 3\nassert recherche(L, 7) == -1\nassert recherche([], 4) == -1",
+      "indice": "Ce sont exactement les mêmes bornes que dans la version avec while : à droite, la zone commence juste après milieu ; à gauche, elle s'arrête à milieu (exclu).",
+      "correction": "def dicho_rec(liste, x, debut, fin):\n    if debut >= fin:              # zone vide : x n'est pas là\n        return -1\n    milieu = (debut + fin) // 2\n    if liste[milieu] == x:\n        return milieu\n    elif liste[milieu] < x:\n        return dicho_rec(liste, x, milieu + 1, fin)    # à droite\n    else:\n        return dicho_rec(liste, x, debut, milieu)      # à gauche (fin exclue)\n\n\n# 2. Le premier appel couvre toute la liste : debut = 0 et fin = len(liste).\ndef recherche(liste, x):\n    return dicho_rec(liste, x, 0, len(liste))",
+      "base": null,
+      "papier": false
+    }
+  ]
+}

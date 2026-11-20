@@ -1,0 +1,125 @@
+{
+  "seances": [
+    {
+      "id": "seance-1",
+      "numero": 1,
+      "date": "",
+      "titre": "Python : syntaxe, listes, dictionnaires, fonctions",
+      "examen": "bac-blanc",
+      "objectifs": [
+        "Revoir la syntaxe Python de base sans hésiter : :, indentation, = et ==",
+        "Parcourir et construire une liste",
+        "Lire, ajouter et parcourir un dictionnaire",
+        "Écrire une fonction qui renvoie un résultat et la tester avec assert"
+      ],
+      "competences": [
+        "py-syntaxe",
+        "py-conditions",
+        "py-boucles",
+        "py-fonctions",
+        "py-listes-acces",
+        "py-listes-construire",
+        "py-dict-acces",
+        "py-dict-parcours",
+        "py-structures",
+        "py-assert"
+      ],
+      "exercices": [
+        "py-00",
+        "py-01",
+        "py-02",
+        "py-05",
+        "py-04",
+        "py-06"
+      ],
+      "devoirs": [
+        "py-03",
+        "py-08",
+        "py-09",
+        "py-07"
+      ],
+      "faite": false,
+      "bilan": ""
+    },
+    {
+      "id": "seance-2",
+      "numero": 2,
+      "date": "",
+      "titre": "Bases de données, SQL, hachage",
+      "examen": "bac-blanc",
+      "objectifs": [
+        "Lire un schéma relationnel : clés primaires et étrangères",
+        "Écrire des requêtes SELECT avec WHERE, ORDER BY, COUNT et une jointure",
+        "Calculer un haché à la main et gérer une collision"
+      ],
+      "competences": [
+        "bdd-modele",
+        "bdd-cles",
+        "bdd-schema",
+        "bdd-contraintes",
+        "sql-select",
+        "sql-tri",
+        "sql-agregats",
+        "sql-jointure",
+        "sql-modif",
+        "hash-ascii",
+        "hash-modulo",
+        "hash-table",
+        "hash-collisions"
+      ],
+      "exercices": [
+        "bdd-01",
+        "sql-01",
+        "sql-02",
+        "sql-03",
+        "hash-01",
+        "hash-02"
+      ],
+      "devoirs": [
+        "sql-04",
+        "hash-03",
+        "py-10"
+      ],
+      "faite": false,
+      "bilan": ""
+    },
+    {
+      "id": "seance-3",
+      "numero": 3,
+      "date": "",
+      "titre": "Algorithmique, récursivité, dichotomie, sujet type en temps limité",
+      "examen": "bac-blanc",
+      "objectifs": [
+        "Écrire un parcours, un minimum, une moyenne",
+        "Estimer la complexité d'un algorithme",
+        "Suivre et écrire une fonction récursive",
+        "Écrire une dichotomie en [debut, fin[ avec ses cas particuliers",
+        "Faire un exercice type bac en temps limité, sur papier"
+      ],
+      "competences": [
+        "algo-parcours",
+        "algo-extremum",
+        "algo-tri",
+        "algo-complexite",
+        "rec-principe",
+        "rec-trace",
+        "rec-dichotomie",
+        "rec-dicho-bornes"
+      ],
+      "exercices": [
+        "algo-01",
+        "algo-02",
+        "algo-04",
+        "rec-01",
+        "rec-03",
+        "rec-04"
+      ],
+      "devoirs": [
+        "algo-03",
+        "rec-02"
+      ],
+      "faite": false,
+      "bilan": ""
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "competences": {
+    "py-boucles": {
+      "lire": 4,
+      "ecrire": 2,
+      "maj": "2026-11-14T17:30:00.000Z",
+      "historique": [
+        {
+          "date": "2026-11-14T17:20:00.000Z",
+          "axe": "lire",
+          "ancien": 0,
+          "nouveau": 4
+        },
+        {
+          "date": "2026-11-14T17:30:00.000Z",
+          "axe": "ecrire",
+          "ancien": 0,
+          "nouveau": 2
+        }
+      ]
+    },
+    "py-dict-acces": {
+      "lire": 3,
+      "ecrire": 1,
+      "maj": "2026-11-14T17:40:00.000Z",
+      "historique": [
+        {
+          "date": "2026-11-14T17:40:00.000Z",
+          "axe": "lire",
+          "ancien": 0,
+          "nouveau": 3
+        },
+        {
+          "date": "2026-11-14T17:40:00.000Z",
+          "axe": "ecrire",
+          "ancien": 0,
+          "nouveau": 1
+        }
+      ]
+    }
+  },
+  "notes": [
+    {
+      "id": "note-ex1",
+      "date": "2026-11-14T17:35:00.000Z",
+      "competence": "py-dict-acces",
+      "seance": null,
+      "type": "blocage",
+      "texte": "Confond d[cle] et d.cle",
+      "resolue": false
+    },
+    {
+      "id": "note-ex2",
+      "date": "2026-11-14T17:25:00.000Z",
+      "competence": "py-boucles",
+      "seance": null,
+      "type": "declic",
+      "texte": "A compris que range(n) s'arrête à n-1",
+      "resolue": false
+    }
+  ],
+  "resultats": [
+    {
+      "id": "res-ex1",
+      "date": "2026-11-14T17:20:00.000Z",
+      "exercice": "py-00",
+      "resultat": "seule",
+      "mode": "basthon",
+      "duree": 8,
+      "commentaire": "Rapide et juste"
+    }
+  ]
+}

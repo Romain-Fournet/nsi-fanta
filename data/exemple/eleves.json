@@ -1,0 +1,24 @@
+{
+  "eleves": [
+    {
+      "id": "exemple",
+      "prenom": "Camille (exemple)",
+      "classe": "Terminale",
+      "examens": [
+        {
+          "id": "bac-blanc",
+          "titre": "Bac blanc NSI",
+          "date": "2026-12-09",
+          "format": "Écrit, 3 h 30, trois exercices indépendants, sur 20, sans calculatrice"
+        },
+        {
+          "id": "bac",
+          "titre": "Bac NSI (épreuve écrite)",
+          "date": "",
+          "format": "Écrit, 3 h 30, sur 20 — date à fixer"
+        }
+      ],
+      "profil": "Élève fictive pour essayer le site."
+    }
+  ]
+}

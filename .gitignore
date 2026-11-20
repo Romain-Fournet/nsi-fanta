@@ -1,0 +1,8 @@
+node_modules/
+dist/
+data/_sauvegardes/
+data/eleves/
+data/eleves.json
+.DS_Store
+*.tmp
+.impeccable/
