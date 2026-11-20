@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store.jsx'
-import { Entete } from '../components/ui.jsx'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Carte, Entete, Fil } from '../components/ui.jsx'
 import { TYPES_EXERCICE } from '../lib/outils.js'
 
 const VIDE = {
@@ -66,8 +67,8 @@ export default function EditeurExercice() {
 
   if (id && !existant) {
     return (
-      <div className="feuille">
-        <h1>Exercice introuvable</h1>
+      <div className="carte" style={{ padding: 28, maxWidth: 520 }}>
+        <h1 style={{ fontSize: '1.5rem', marginBottom: 8 }}>Exercice introuvable</h1>
         <Link to="/exercices">Retour à la liste</Link>
       </div>
     )
@@ -114,13 +115,22 @@ export default function EditeurExercice() {
 
   return (
     <>
-      <p className="petit" style={{ margin: '0 0 8px' }}>
-        <Link to={existant ? `/exercices/${existant.id}` : '/exercices'}>← Retour</Link>
-      </p>
-      <Entete titre={existant ? `Modifier ${existant.id}` : 'Nouvel exercice'} sousTitre="Enregistré dans data/exercices.json." />
+      <Fil
+        liens={[
+          { to: '/exercices', label: 'Exercices' },
+          ...(existant ? [{ to: `/exercices/${existant.id}`, label: existant.id }] : []),
+          { label: existant ? 'Modifier' : 'Nouvel exercice' },
+        ]}
+      />
+      <Entete
+        icone={existant ? Pencil : Plus}
+        titre={existant ? `Modifier ${existant.id}` : 'Nouvel exercice'}
+        sousTitre="Enregistré dans data/exercices.json. Lance ensuite « npm run check » pour vérifier la correction."
+      />
 
       <form className="pile" onSubmit={enregistrer}>
-        <section className="feuille pile">
+        <Carte titre="Propriétés">
+          <div className="pile" style={{ gap: 16 }}>
           <div className="champs">
             <div className="champ">
               <label htmlFor="e-id">Identifiant</label>
@@ -195,10 +205,10 @@ export default function EditeurExercice() {
             <input type="checkbox" checked={!!ex.papier} onChange={(e) => maj('papier')(e.target.checked)} />
             À faire sur papier d’abord, puis vérifier dans Basthon
           </label>
-        </section>
+          </div>
+        </Carte>
 
-        <section className="feuille">
-          <h2>Compétences</h2>
+        <Carte titre="Compétences">
           {!theme ? (
             <p className="vide">Choisis d’abord un thème.</p>
           ) : (
@@ -213,9 +223,10 @@ export default function EditeurExercice() {
                 ))}
             </div>
           )}
-        </section>
+        </Carte>
 
-        <section className="feuille pile">
+        <Carte titre="Contenu">
+          <div className="pile" style={{ gap: 18 }}>
           <Zone
             id="e-enonce"
             label="Énoncé"
@@ -253,7 +264,8 @@ export default function EditeurExercice() {
             lignes={10}
             aide="Vérifiée par « npm run check » : la correction Python doit passer les tests, la correction SQL doit tourner sur SQLite."
           />
-        </section>
+          </div>
+        </Carte>
 
         {erreur && (
           <p className="alerte" role="alert">
@@ -271,6 +283,7 @@ export default function EditeurExercice() {
           </div>
           {existant && (
             <button type="button" className="btn btn--danger" onClick={supprimer}>
+              <Trash2 size={15} className="icone" aria-hidden="true" />
               Supprimer l’exercice
             </button>
           )}

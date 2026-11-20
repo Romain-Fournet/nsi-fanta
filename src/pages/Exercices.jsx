@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { FileQuestion, PenLine, Plus, SquareCode } from 'lucide-react'
 import { useStore } from '../store.jsx'
 import { Difficulte, Entete, EtiquetteTheme, Resultat, TypeExercice } from '../components/ui.jsx'
 import { TYPES_EXERCICE, dernierResultat, statutExercice } from '../lib/outils.js'
@@ -7,7 +8,7 @@ import { TYPES_EXERCICE, dernierResultat, statutExercice } from '../lib/outils.j
 const STATUTS = {
   tous: 'Tous',
   afaire: 'À faire',
-  reussi: 'Réussi seule',
+  reussi: 'Réussis seule',
   arefaire: 'À refaire',
 }
 
@@ -18,61 +19,73 @@ export default function Exercices() {
   const [statut, setStatut] = useState('tous')
 
   const themes = Object.fromEntries(referentiel.themes.map((t) => [t.id, t]))
-  const liste = exercices.exercices.filter(
-    (e) =>
-      (!theme || e.theme === theme) &&
-      (!type || e.type === type) &&
-      (statut === 'tous' || statutExercice(suivi, e.id) === statut),
-  )
+  const filtres = (s) =>
+    exercices.exercices.filter(
+      (e) =>
+        (!theme || e.theme === theme) &&
+        (!type || e.type === type) &&
+        (s === 'tous' || statutExercice(suivi, e.id) === s),
+    )
+  const liste = filtres(statut)
 
   return (
     <>
-      <Entete titre="Exercices" sousTitre={`${exercices.exercices.length} exercices, du « lire » vers l’« écrire ».`}>
+      <Entete
+        icone={SquareCode}
+        titre="Exercices"
+        sousTitre="Du plus simple au plus exigeant : lire et prédire, suivre une trace, trouver le bug, compléter, écrire."
+      >
         <Link className="btn btn--clair" to="/exercices/nouveau">
-          + Nouvel exercice
+          <Plus size={15} className="icone" aria-hidden="true" />
+          Nouvel exercice
         </Link>
       </Entete>
 
-      <div className="feuille">
-        <div className="champs no-print" style={{ marginBottom: 14 }}>
-          <div className="champ">
-            <label htmlFor="f-theme">Thème</label>
-            <select id="f-theme" value={theme} onChange={(e) => setTheme(e.target.value)}>
-              <option value="">Tous les thèmes</option>
-              {referentiel.themes.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.titre}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="champ">
-            <label htmlFor="f-type">Type</label>
-            <select id="f-type" value={type} onChange={(e) => setType(e.target.value)}>
-              <option value="">Tous les types</option>
-              {Object.entries(TYPES_EXERCICE).map(([k, v]) => (
-                <option key={k} value={k}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="champ">
-            <span className="petit discret" id="f-statut">
-              Statut
-            </span>
-            <div className="segments" role="group" aria-labelledby="f-statut">
-              {Object.entries(STATUTS).map(([k, v]) => (
-                <button key={k} type="button" aria-pressed={statut === k} onClick={() => setStatut(k)}>
-                  {v}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="vues no-print" role="group" aria-label="Filtrer par statut">
+        {Object.entries(STATUTS).map(([k, v]) => (
+          <button key={k} type="button" aria-pressed={statut === k} onClick={() => setStatut(k)}>
+            {v}
+            <span className="vues__compte">{filtres(k).length}</span>
+          </button>
+        ))}
+      </div>
+
+      <section className="carte">
+        <div className="filtres no-print">
+          <label className="sr-only" htmlFor="f-theme">
+            Thème
+          </label>
+          <select id="f-theme" value={theme} onChange={(e) => setTheme(e.target.value)}>
+            <option value="">Tous les thèmes</option>
+            {referentiel.themes.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.titre}
+              </option>
+            ))}
+          </select>
+          <label className="sr-only" htmlFor="f-type">
+            Type
+          </label>
+          <select id="f-type" value={type} onChange={(e) => setType(e.target.value)}>
+            <option value="">Tous les types</option>
+            {Object.entries(TYPES_EXERCICE).map(([k, v]) => (
+              <option key={k} value={k}>
+                {v}
+              </option>
+            ))}
+          </select>
+          <span className="petit discret" style={{ marginLeft: 'auto' }}>
+            {liste.length} exercice{liste.length > 1 ? 's' : ''}
+          </span>
         </div>
 
         {liste.length === 0 ? (
-          <p className="vide">Aucun exercice ne correspond à ces filtres.</p>
+          <div style={{ padding: '36px 20px', textAlign: 'center' }}>
+            <FileQuestion size={22} className="icone discret" aria-hidden="true" />
+            <p className="vide" style={{ marginTop: 8 }}>
+              Aucun exercice ne correspond à ces filtres.
+            </p>
+          </div>
         ) : (
           <div className="defile">
             <table className="tableau">
@@ -90,10 +103,15 @@ export default function Exercices() {
                 {liste.map((e) => (
                   <tr key={e.id}>
                     <td>
-                      <Link to={`/exercices/${e.id}`}>
-                        <code className="inline">{e.id}</code> {e.titre}
-                      </Link>
-                      {e.papier && <span className="etiquette" style={{ marginLeft: 6 }}>papier d’abord</span>}
+                      <span className="ligne__titre">
+                        <span className="id">{e.id}</span>
+                        <Link to={`/exercices/${e.id}`}>{e.titre}</Link>
+                        {e.papier && (
+                          <span title="Sur papier d’abord" aria-label="Sur papier d’abord" style={{ display: 'inline-flex' }}>
+                            <PenLine size={14} className="icone discret" aria-hidden="true" />
+                          </span>
+                        )}
+                      </span>
                     </td>
                     <td>
                       <EtiquetteTheme theme={themes[e.theme]} />
@@ -104,7 +122,7 @@ export default function Exercices() {
                     <td>
                       <Difficulte valeur={e.difficulte} />
                     </td>
-                    <td className="num">{e.duree} min</td>
+                    <td className="num discret">{e.duree} min</td>
                     <td>
                       <Resultat resultat={dernierResultat(suivi, e.id)} />
                     </td>
@@ -114,7 +132,7 @@ export default function Exercices() {
             </table>
           </div>
         )}
-      </div>
+      </section>
     </>
   )
 }

@@ -1,6 +1,10 @@
 // Fonctions pures partagées par les pages.
 
-export const NIVEAU_COULEURS = ['#B9C0CC', '#C8323C', '#E07B24', '#E5B800', '#2E8B57']
+export const NIVEAU_COULEURS = ['var(--n0)', 'var(--n1)', 'var(--n2)', 'var(--n3)', 'var(--n4)']
+
+/** Couleur d'étiquette (classe tag--…) par type de note et par résultat. */
+export const COULEUR_NOTE = { blocage: 'rouge', erreur: 'orange', declic: 'vert', astuce: 'bleu', remarque: '' }
+export const COULEUR_RESULTAT = { seule: 'vert', aide: 'jaune', echec: 'rouge' }
 
 export const TYPES_EXERCICE = {
   lire: 'Lire (prédire)',

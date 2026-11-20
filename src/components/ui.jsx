@@ -1,47 +1,157 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ChevronRight, Copy, ExternalLink, Plus, Trash2 } from 'lucide-react'
 import { useStore } from '../store.jsx'
 import { LONGUEUR_LIEN_MAX, lienBasthon, scriptExercice } from '../lib/basthon.js'
 import {
+  COULEUR_NOTE,
+  COULEUR_RESULTAT,
   NIVEAU_COULEURS,
   RESULTATS,
   TYPES_EXERCICE,
   TYPES_NOTE,
   copier,
   dernierResultat,
-  formatDate,
   formatDateCourte,
 } from '../lib/outils.js'
 
-/* ---------- Niveaux ---------- */
+/* ---------- Typographie ---------- */
 
-export function Pastille({ niveau, titre }) {
+/** Espaces insécables du français : « guillemets », et avant : ; ! ? » */
+export function typo(texte) {
+  if (typeof texte !== 'string') return texte
+  return texte.replace(/«\s+/g, '«\u00a0').replace(/\s+([»:;!?])/g, '\u00a0$1')
+}
+
+/* ---------- Mise en page ---------- */
+
+export function Entete({ icone: Icone, couleur, titre, sousTitre, proprietes, children }) {
   return (
-    <span
-      className="pastille"
-      style={{ background: NIVEAU_COULEURS[niveau] ?? NIVEAU_COULEURS[0] }}
-      title={titre}
-      aria-hidden={titre ? undefined : true}
-    />
+    <header className="entete">
+      <div className="entete__gauche">
+        {Icone && (
+          <div
+            className="entete__icone"
+            style={
+              couleur
+                ? { color: `color-mix(in srgb, ${couleur} 82%, black)`, background: `color-mix(in srgb, ${couleur} 11%, white)` }
+                : undefined
+            }
+            aria-hidden="true"
+          >
+            <Icone size={24} className="icone" />
+          </div>
+        )}
+        <h1>{titre}</h1>
+        {sousTitre && <p className="entete__sous">{typo(sousTitre)}</p>}
+        {proprietes && <div className="proprietes">{proprietes}</div>}
+      </div>
+      {children && <div className="entete__actions">{children}</div>}
+    </header>
   )
 }
 
-/** 4 cases à colorier. Clic = fixe le niveau, re-clic sur la case choisie = « pas vu ». */
+export function Carte({ titre, icone: Icone, action, children, flush = false, className = '', ...reste }) {
+  return (
+    <section className={`carte ${className}`} {...reste}>
+      {(titre || action) && (
+        <div className="carte__tete">
+          {titre && (
+            <h2 className="carte__titre">
+              {Icone && <Icone size={17} className="icone" aria-hidden="true" />}
+              {titre}
+            </h2>
+          )}
+          {action}
+        </div>
+      )}
+      <div className={flush ? 'carte__corps carte__corps--flush' : 'carte__corps'}>{children}</div>
+    </section>
+  )
+}
+
+export function LienCarte({ to, children }) {
+  return (
+    <Link className="carte__lien" to={to}>
+      {children}
+      <ChevronRight size={14} className="icone" aria-hidden="true" />
+    </Link>
+  )
+}
+
+export function Fil({ liens }) {
+  return (
+    <nav className="fil no-print" aria-label="Fil d’Ariane">
+      {liens.map((l, i) => (
+        <span key={i} style={{ display: 'contents' }}>
+          {i > 0 && <ChevronRight size={14} className="icone" aria-hidden="true" />}
+          {l.to ? <Link to={l.to}>{l.label}</Link> : <span>{l.label}</span>}
+        </span>
+      ))}
+    </nav>
+  )
+}
+
+export function Repli({ titre, children, ouvert = false }) {
+  return (
+    <details className="repli" open={ouvert || undefined}>
+      <summary>
+        <ChevronRight size={16} className="icone" aria-hidden="true" />
+        {titre}
+      </summary>
+      <div className="repli__corps">{children}</div>
+    </details>
+  )
+}
+
+/* ---------- Niveaux ---------- */
+
+function nomNiveau(niveaux, v) {
+  return niveaux?.find((n) => n.valeur === v)?.label ?? ''
+}
+
+/** Échelle en lecture seule. mini : sans libellé, pour les listes. */
+export function Niveau({ valeur, niveaux, axe, mini = false }) {
+  const nomAxe = axe === 'lire' ? 'Lire' : axe === 'ecrire' ? 'Écrire' : null
+  const label = nomNiveau(niveaux, valeur)
+  return (
+    <span
+      className={`niveau${mini ? ' niveau--mini' : ''}`}
+      style={{ '--lv': NIVEAU_COULEURS[valeur] }}
+      title={nomAxe ? `${nomAxe} : ${label}` : label}
+      role="img"
+      aria-label={nomAxe ? `${nomAxe} : ${label}` : label}
+    >
+      {nomAxe && <span className={mini ? 'niveau__axe niveau__axe--mini' : 'niveau__axe'}>{nomAxe}</span>}
+      <span className="niveau__barre">
+        {[1, 2, 3, 4].map((n) => (
+          <span key={n} className={`niveau__seg${n <= valeur ? ' on' : ''}`} />
+        ))}
+      </span>
+      {!mini && <span className="niveau__label">{label}</span>}
+    </span>
+  )
+}
+
+/** Échelle cliquable. Clic = fixe le niveau, re-clic sur le niveau choisi = « pas vu ». */
 export function Echelle({ axe, valeur, onChange, niveaux, libelleCompetence }) {
   const nomAxe = axe === 'lire' ? 'Lire' : 'Écrire'
-  const label = niveaux?.find((n) => n.valeur === valeur)?.label ?? ''
   return (
-    <div className="echelle" role="group" aria-label={`${nomAxe} : ${libelleCompetence}`}>
-      <span className="echelle__axe">{nomAxe}</span>
-      <span className="echelle__cases">
+    <div
+      className="niveau"
+      style={{ '--lv': NIVEAU_COULEURS[valeur] }}
+      role="group"
+      aria-label={`${nomAxe} : ${libelleCompetence}`}
+    >
+      <span className="niveau__axe">{nomAxe}</span>
+      <span className="niveau__barre">
         {[1, 2, 3, 4].map((n) => {
-          const nom = niveaux?.find((x) => x.valeur === n)?.label ?? n
+          const nom = nomNiveau(niveaux, n)
           return (
             <button
               key={n}
               type="button"
-              className={`echelle__case${n <= valeur ? ' remplie' : ''}`}
-              style={n <= valeur ? { background: NIVEAU_COULEURS[valeur] } : undefined}
+              className={`niveau__seg${n <= valeur ? ' on' : ''}`}
               aria-pressed={n === valeur}
               aria-label={`${nomAxe} : ${nom}`}
               title={n === valeur ? `${nom} — cliquer pour remettre à « pas vu »` : nom}
@@ -50,7 +160,7 @@ export function Echelle({ axe, valeur, onChange, niveaux, libelleCompetence }) {
           )
         })}
       </span>
-      <span className="echelle__label">{label}</span>
+      <span className="niveau__label">{nomNiveau(niveaux, valeur)}</span>
     </div>
   )
 }
@@ -60,7 +170,7 @@ export function LegendeNiveaux({ niveaux }) {
     <div className="legende" aria-label="Légende des niveaux">
       {niveaux.map((n) => (
         <span key={n.valeur}>
-          <Pastille niveau={n.valeur} />
+          <span className="carre" style={{ '--lv': NIVEAU_COULEURS[n.valeur] }} aria-hidden="true" />
           {n.label}
         </span>
       ))}
@@ -68,79 +178,88 @@ export function LegendeNiveaux({ niveaux }) {
   )
 }
 
-export function BarreProgression({ axe, valeur }) {
+export function BarreProgression({ valeur, couleur, label }) {
   return (
     <div className="barre-prog">
-      <span>{axe === 'lire' ? 'Lire' : 'Écrire'}</span>
       <div
         className="barre-prog__fond"
         role="progressbar"
         aria-valuenow={valeur}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={axe === 'lire' ? 'Lire' : 'Écrire'}
+        aria-label={label}
       >
-        <div
-          className={`barre-prog__plein${axe === 'ecrire' ? ' barre-prog__plein--ecrire' : ''}`}
-          style={{ width: `${valeur}%` }}
-        />
+        <div className="barre-prog__plein" style={{ width: `${valeur}%`, '--c': couleur }} />
       </div>
       <span className="barre-prog__val">{valeur} %</span>
     </div>
   )
 }
 
-/* ---------- Exercices ---------- */
+/* ---------- Étiquettes ---------- */
+
+export function Tag({ couleur = '', children, grand = false, ...reste }) {
+  return (
+    <span className={`tag${couleur ? ` tag--${couleur}` : ''}${grand ? ' tag--grand' : ''}`} {...reste}>
+      {children}
+    </span>
+  )
+}
 
 export function Difficulte({ valeur }) {
   return (
-    <span className="difficulte" aria-label={`Difficulté ${valeur} sur 3`} title={`Difficulté ${valeur}/3`}>
+    <span className="difficulte" role="img" aria-label={`Difficulté ${valeur} sur 3`} title={`Difficulté ${valeur}/3`}>
       {[1, 2, 3].map((i) => (
-        <span key={i} className={i <= valeur ? '' : 'off'} aria-hidden="true">
-          ●
-        </span>
+        <span key={i} className={i <= valeur ? 'on' : ''} />
       ))}
     </span>
   )
 }
 
-export function Resultat({ resultat, court = false }) {
-  if (!resultat) return <span className="res res--aucun">Pas encore fait</span>
+export function Resultat({ resultat, avecDate = false }) {
+  if (!resultat) return <span className="tag tag--contour">À faire</span>
   return (
-    <span className={`res res--${resultat.resultat}`}>
-      {RESULTATS[resultat.resultat]}
-      {!court && resultat.date && <span className="discret petit"> · {formatDateCourte(resultat.date)}</span>}
+    <span className="boutons" style={{ gap: 6, flexWrap: 'nowrap' }}>
+      <Tag couleur={COULEUR_RESULTAT[resultat.resultat]}>{RESULTATS[resultat.resultat]}</Tag>
+      {avecDate && resultat.date && (
+        <span className="petit discret" style={{ whiteSpace: 'nowrap' }}>
+          {formatDateCourte(resultat.date)}
+        </span>
+      )}
     </span>
   )
 }
 
 export function TypeExercice({ type }) {
-  return <span className="etiquette">{TYPES_EXERCICE[type] || type}</span>
+  return <Tag>{TYPES_EXERCICE[type] || type}</Tag>
 }
 
 export function EtiquetteTheme({ theme }) {
   if (!theme) return null
   return (
-    <span className="etiquette etiquette--theme" style={{ color: theme.couleur }}>
+    <span className="tag tag--theme" style={{ '--c': theme.couleur }}>
       {theme.court}
     </span>
   )
 }
 
-/** Lien vers un exercice avec son dernier résultat. */
+/** Ligne de liste : exercice et son dernier résultat. */
 export function LigneExercice({ exercice, suivi }) {
   if (!exercice) return null
   return (
     <li>
-      <Link to={`/exercices/${exercice.id}`}>
-        <code className="inline">{exercice.id}</code> {exercice.titre}
+      <Link className="ligne__titre" to={`/exercices/${exercice.id}`}>
+        <span className="id">{exercice.id}</span>
+        <span>{exercice.titre}</span>
       </Link>
       <Resultat resultat={dernierResultat(suivi, exercice.id)} />
     </li>
   )
 }
 
-/** Énoncé : texte simple, blocs ``` en police code, lignes « - » en liste. */
+/* ---------- Contenu ---------- */
+
+/** Énoncé : texte simple, blocs ``` en police code, lignes « - » en liste, `code` en ligne. */
 export function Enonce({ texte }) {
   if (!texte) return null
   const morceaux = texte.split(/```[a-z]*\n?/)
@@ -160,14 +279,13 @@ export function Enonce({ texte }) {
 }
 
 function enLigne(texte) {
-  // `code` en ligne
   return texte.split(/(`[^`]+`)/).map((p, i) =>
     p.startsWith('`') && p.endsWith('`') && p.length > 1 ? (
       <code className="inline" key={i}>
         {p.slice(1, -1)}
       </code>
     ) : (
-      p
+      typo(p)
     ),
   )
 }
@@ -250,7 +368,7 @@ export function BoutonsBasthon({ exercice, bases }) {
   const tropLong = lien && lien.length > LONGUEUR_LIEN_MAX
 
   return (
-    <div className="pile">
+    <div className="pile" style={{ gap: 12 }}>
       <div className="boutons">
         {executable && (
           <a
@@ -261,7 +379,8 @@ export function BoutonsBasthon({ exercice, bases }) {
             aria-disabled={!lien}
             onClick={(e) => !lien && e.preventDefault()}
           >
-            Ouvrir dans Basthon ↗
+            Ouvrir dans Basthon
+            <ExternalLink size={15} className="icone" aria-hidden="true" />
           </a>
         )}
         <button
@@ -269,24 +388,26 @@ export function BoutonsBasthon({ exercice, bases }) {
           className="btn btn--clair"
           onClick={() => copier(exercice.langage === 'sql' ? script : exercice.code).then(() => flash('Code copié'))}
         >
+          <Copy size={15} className="icone" aria-hidden="true" />
           Copier le code
         </button>
         {exercice.tests?.trim() && (
           <button type="button" className="btn btn--clair" onClick={() => copier(exercice.tests).then(() => flash('Tests copiés'))}>
+            <Copy size={15} className="icone" aria-hidden="true" />
             Copier les tests
           </button>
         )}
-        <span className="discret petit" role="status">
+        <span className="petit discret" role="status">
           {message}
         </span>
       </div>
       {tropLong && (
-        <p className="info petit">
+        <p className="petit discret">
           Le lien est long ({lien.length} caractères) : s’il ne s’ouvre pas, copie le code et colle-le dans Basthon.
         </p>
       )}
       {exercice.langage === 'sql' && (
-        <p className="discret petit">
+        <p className="petit discret">
           Basthon s’ouvre en mode SQL avec la base déjà créée. Écris tes requêtes sous la ligne « Tes requêtes ».
         </p>
       )}
@@ -294,33 +415,35 @@ export function BoutonsBasthon({ exercice, bases }) {
   )
 }
 
-/* ---------- Notes du prof ---------- */
+/* ---------- Notes ---------- */
 
 export function Note({ note, competence, avecCompetence = false, onResolue, onSupprimer }) {
   return (
     <div className={`note${note.resolue ? ' note--resolue' : ''}`}>
-      <span className={`type-note type-note--${note.type}`}>{TYPES_NOTE[note.type] || note.type}</span>
       <div>
-        <div className="annotation">{note.texte}</div>
-        {avecCompetence && competence && <div className="discret petit">{competence.label}</div>}
+        <div className="note__tete">
+          <Tag couleur={COULEUR_NOTE[note.type]}>{TYPES_NOTE[note.type] || note.type}</Tag>
+          {avecCompetence && competence && <span className="petit discret">{competence.label}</span>}
+          <span className="note__meta">{formatDateCourte(note.date)}</span>
+        </div>
+        <div className="note__texte">{typo(note.texte)}</div>
       </div>
       <div className="note__actions">
-        <span className="note__meta">{formatDate(note.date, { day: 'numeric', month: 'short' })}</span>
         {note.type === 'blocage' && onResolue && (
           <label className="case petit">
             <input type="checkbox" checked={!!note.resolue} onChange={(e) => onResolue(e.target.checked)} />
-            résolu
+            Résolu
           </label>
         )}
         {onSupprimer && (
           <button
             type="button"
-            className="btn btn--petit btn--clair"
+            className="btn btn--fantome btn--icone"
             onClick={onSupprimer}
             aria-label="Supprimer la note"
             title="Supprimer la note"
           >
-            ✕
+            <Trash2 size={15} className="icone" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -334,6 +457,7 @@ export function FormulaireNote({ competenceFixe, seanceId, onAjout }) {
   const [competence, setCompetence] = useState(competenceFixe || '')
   const [type, setType] = useState('blocage')
   const [texte, setTexte] = useState('')
+  const cle = competenceFixe || seanceId
 
   const valider = (e) => {
     e.preventDefault()
@@ -346,9 +470,9 @@ export function FormulaireNote({ competenceFixe, seanceId, onAjout }) {
     <form className={`formulaire-note${competenceFixe ? '' : ' formulaire-note--large'}`} onSubmit={valider}>
       {!competenceFixe && (
         <div className="champ">
-          <label htmlFor={`comp-${seanceId}`}>Compétence</label>
-          <select id={`comp-${seanceId}`} value={competence} onChange={(e) => setCompetence(e.target.value)}>
-            <option value="">— Générale —</option>
+          <label htmlFor={`comp-${cle}`}>Compétence</label>
+          <select id={`comp-${cle}`} value={competence} onChange={(e) => setCompetence(e.target.value)}>
+            <option value="">Générale</option>
             {referentiel.themes.map((t) => (
               <optgroup key={t.id} label={t.court}>
                 {t.competences
@@ -364,8 +488,8 @@ export function FormulaireNote({ competenceFixe, seanceId, onAjout }) {
         </div>
       )}
       <div className="champ">
-        <label htmlFor={`type-${competenceFixe || seanceId}`}>Type</label>
-        <select id={`type-${competenceFixe || seanceId}`} value={type} onChange={(e) => setType(e.target.value)}>
+        <label htmlFor={`type-${cle}`}>Type</label>
+        <select id={`type-${cle}`} value={type} onChange={(e) => setType(e.target.value)}>
           {Object.entries(TYPES_NOTE).map(([k, v]) => (
             <option key={k} value={k}>
               {v}
@@ -374,9 +498,9 @@ export function FormulaireNote({ competenceFixe, seanceId, onAjout }) {
         </select>
       </div>
       <div className="champ">
-        <label htmlFor={`texte-${competenceFixe || seanceId}`}>Note</label>
+        <label htmlFor={`texte-${cle}`}>Note</label>
         <input
-          id={`texte-${competenceFixe || seanceId}`}
+          id={`texte-${cle}`}
           type="text"
           value={texte}
           onChange={(e) => setTexte(e.target.value)}
@@ -384,20 +508,9 @@ export function FormulaireNote({ competenceFixe, seanceId, onAjout }) {
         />
       </div>
       <button type="submit" className="btn" disabled={!texte.trim()}>
+        <Plus size={15} className="icone" aria-hidden="true" />
         Ajouter
       </button>
     </form>
-  )
-}
-
-export function Entete({ titre, sousTitre, children }) {
-  return (
-    <header className="entete">
-      <div>
-        <h1>{titre}</h1>
-        {sousTitre && <p className="entete__sous">{sousTitre}</p>}
-      </div>
-      {children && <div className="boutons">{children}</div>}
-    </header>
   )
 }

@@ -1,89 +1,207 @@
 {
   "niveaux": [
-    { "valeur": 0, "code": "pas-vu", "label": "Pas vu", "emoji": "⬜" },
-    { "valeur": 1, "code": "bloque", "label": "Bloque", "emoji": "🟥" },
-    { "valeur": 2, "code": "fragile", "label": "Fragile", "emoji": "🟧" },
-    { "valeur": 3, "code": "en-cours", "label": "En cours", "emoji": "🟨" },
-    { "valeur": 4, "code": "maitrise", "label": "Maîtrisé", "emoji": "🟩" }
+    {
+      "valeur": 0,
+      "code": "pas-vu",
+      "label": "Pas vu",
+      "emoji": "⬜"
+    },
+    {
+      "valeur": 1,
+      "code": "bloque",
+      "label": "Bloque",
+      "emoji": "🟥"
+    },
+    {
+      "valeur": 2,
+      "code": "fragile",
+      "label": "Fragile",
+      "emoji": "🟧"
+    },
+    {
+      "valeur": 3,
+      "code": "en-cours",
+      "label": "En cours",
+      "emoji": "🟨"
+    },
+    {
+      "valeur": 4,
+      "code": "maitrise",
+      "label": "Maîtrisé",
+      "emoji": "🟩"
+    }
   ],
   "themes": [
     {
       "id": "python",
       "titre": "Python : listes et dictionnaires",
       "court": "Python",
-      "couleur": "#2453A6",
+      "couleur": "#337EA9",
       "competences": [
-        { "id": "py-syntaxe", "label": "Variables, types, affectations et opérateurs" },
-        { "id": "py-conditions", "label": "Conditions if / elif / else" },
-        { "id": "py-boucles", "label": "Boucles for et while, range" },
-        { "id": "py-fonctions", "label": "Fonctions : paramètres et return" },
-        { "id": "py-listes-acces", "label": "Listes : indices, len, parcours" },
-        { "id": "py-listes-construire", "label": "Listes : construire avec append ou par compréhension" },
-        { "id": "py-dict-acces", "label": "Dictionnaires : lire, ajouter, modifier une valeur" },
-        { "id": "py-dict-parcours", "label": "Dictionnaires : parcourir clés, valeurs et items" },
-        { "id": "py-structures", "label": "Listes de dictionnaires, dictionnaires de listes" },
-        { "id": "py-assert", "label": "Tester une fonction avec assert" }
+        {
+          "id": "py-syntaxe",
+          "label": "Variables, types, affectations et opérateurs"
+        },
+        {
+          "id": "py-conditions",
+          "label": "Conditions if / elif / else"
+        },
+        {
+          "id": "py-boucles",
+          "label": "Boucles for et while, range"
+        },
+        {
+          "id": "py-fonctions",
+          "label": "Fonctions : paramètres et return"
+        },
+        {
+          "id": "py-listes-acces",
+          "label": "Listes : indices, len, parcours"
+        },
+        {
+          "id": "py-listes-construire",
+          "label": "Listes : construire avec append ou par compréhension"
+        },
+        {
+          "id": "py-dict-acces",
+          "label": "Dictionnaires : lire, ajouter, modifier une valeur"
+        },
+        {
+          "id": "py-dict-parcours",
+          "label": "Dictionnaires : parcourir clés, valeurs et items"
+        },
+        {
+          "id": "py-structures",
+          "label": "Listes de dictionnaires, dictionnaires de listes"
+        },
+        {
+          "id": "py-assert",
+          "label": "Tester une fonction avec assert"
+        }
       ]
     },
     {
       "id": "bdd",
       "titre": "Bases de données",
       "court": "BDD",
-      "couleur": "#6B4C9A",
+      "couleur": "#9065B0",
       "competences": [
-        { "id": "bdd-modele", "label": "Modèle relationnel : relation, attribut, domaine" },
-        { "id": "bdd-cles", "label": "Clé primaire et clé étrangère" },
-        { "id": "bdd-schema", "label": "Lire et écrire un schéma relationnel" },
-        { "id": "bdd-contraintes", "label": "Contraintes d'intégrité : entité, référence, domaine" }
+        {
+          "id": "bdd-modele",
+          "label": "Modèle relationnel : relation, attribut, domaine"
+        },
+        {
+          "id": "bdd-cles",
+          "label": "Clé primaire et clé étrangère"
+        },
+        {
+          "id": "bdd-schema",
+          "label": "Lire et écrire un schéma relationnel"
+        },
+        {
+          "id": "bdd-contraintes",
+          "label": "Contraintes d'intégrité : entité, référence, domaine"
+        }
       ]
     },
     {
       "id": "sql",
       "titre": "Requêtes SQL",
       "court": "SQL",
-      "couleur": "#1E7F86",
+      "couleur": "#448361",
       "competences": [
-        { "id": "sql-select", "label": "SELECT … FROM … WHERE" },
-        { "id": "sql-tri", "label": "ORDER BY et DISTINCT" },
-        { "id": "sql-agregats", "label": "COUNT, SUM, AVG, MIN, MAX" },
-        { "id": "sql-jointure", "label": "Jointures JOIN … ON" },
-        { "id": "sql-modif", "label": "INSERT, UPDATE, DELETE" }
+        {
+          "id": "sql-select",
+          "label": "SELECT … FROM … WHERE"
+        },
+        {
+          "id": "sql-tri",
+          "label": "ORDER BY et DISTINCT"
+        },
+        {
+          "id": "sql-agregats",
+          "label": "COUNT, SUM, AVG, MIN, MAX"
+        },
+        {
+          "id": "sql-jointure",
+          "label": "Jointures JOIN … ON"
+        },
+        {
+          "id": "sql-modif",
+          "label": "INSERT, UPDATE, DELETE"
+        }
       ]
     },
     {
       "id": "algo",
       "titre": "Algorithmique et complexité",
       "court": "Algo",
-      "couleur": "#B0601C",
+      "couleur": "#D9730D",
       "competences": [
-        { "id": "algo-parcours", "label": "Parcours séquentiel : rechercher, compter" },
-        { "id": "algo-extremum", "label": "Minimum, maximum, moyenne" },
-        { "id": "algo-tri", "label": "Tris par sélection et par insertion" },
-        { "id": "algo-complexite", "label": "Complexité : O(1), O(n), O(n²), O(log n)" }
+        {
+          "id": "algo-parcours",
+          "label": "Parcours séquentiel : rechercher, compter"
+        },
+        {
+          "id": "algo-extremum",
+          "label": "Minimum, maximum, moyenne"
+        },
+        {
+          "id": "algo-tri",
+          "label": "Tris par sélection et par insertion"
+        },
+        {
+          "id": "algo-complexite",
+          "label": "Complexité : O(1), O(n), O(n²), O(log n)"
+        }
       ]
     },
     {
       "id": "hash",
       "titre": "Hachage",
       "court": "Hachage",
-      "couleur": "#8A5A44",
+      "couleur": "#9F6B53",
       "competences": [
-        { "id": "hash-ascii", "label": "Codes ASCII : ord et chr" },
-        { "id": "hash-modulo", "label": "Reste de la division (%) et fonction de hachage" },
-        { "id": "hash-table", "label": "Table de hachage : ranger et rechercher" },
-        { "id": "hash-collisions", "label": "Collisions et doublons" }
+        {
+          "id": "hash-ascii",
+          "label": "Codes ASCII : ord et chr"
+        },
+        {
+          "id": "hash-modulo",
+          "label": "Reste de la division (%) et fonction de hachage"
+        },
+        {
+          "id": "hash-table",
+          "label": "Table de hachage : ranger et rechercher"
+        },
+        {
+          "id": "hash-collisions",
+          "label": "Collisions et doublons"
+        }
       ]
     },
     {
       "id": "rec",
       "titre": "Récursivité et dichotomie",
       "court": "Récursivité",
-      "couleur": "#A23B72",
+      "couleur": "#C14C8A",
       "competences": [
-        { "id": "rec-principe", "label": "Fonction récursive : cas de base et appel récursif" },
-        { "id": "rec-trace", "label": "Suivre les appels récursifs" },
-        { "id": "rec-dichotomie", "label": "Recherche dichotomique dans une liste triée" },
-        { "id": "rec-dicho-bornes", "label": "Dichotomie en [debut, fin[ et cas particuliers" }
+        {
+          "id": "rec-principe",
+          "label": "Fonction récursive : cas de base et appel récursif"
+        },
+        {
+          "id": "rec-trace",
+          "label": "Suivre les appels récursifs"
+        },
+        {
+          "id": "rec-dichotomie",
+          "label": "Recherche dichotomique dans une liste triée"
+        },
+        {
+          "id": "rec-dicho-bornes",
+          "label": "Dichotomie en [debut, fin[ et cas particuliers"
+        }
       ]
     }
   ]

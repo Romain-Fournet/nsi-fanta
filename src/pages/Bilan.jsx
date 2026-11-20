@@ -1,16 +1,8 @@
 import { Link } from 'react-router-dom'
+import { ArrowLeft, Printer } from 'lucide-react'
 import { useStore } from '../store.jsx'
-import { LegendeNiveaux, Pastille } from '../components/ui.jsx'
-import { formatDate, niveauDe, toutesCompetences, trierParDateDesc, trouverCompetence } from '../lib/outils.js'
-
-function Niveau({ valeur, niveaux }) {
-  const label = niveaux.find((n) => n.valeur === valeur)?.label
-  return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-      <Pastille niveau={valeur} /> {label}
-    </span>
-  )
-}
+import { LegendeNiveaux, Niveau, Tag } from '../components/ui.jsx'
+import { COULEUR_RESULTAT, RESULTATS, formatDate, niveauDe, toutesCompetences, trierParDateDesc, trouverCompetence } from '../lib/outils.js'
 
 export default function Bilan() {
   const { referentiel, exercices, suivi, seances, eleve } = useStore()
@@ -36,18 +28,22 @@ export default function Bilan() {
   const parId = Object.fromEntries(exercices.exercices.map((e) => [e.id, e]))
 
   return (
-    <>
+    <div className="bilan-page">
       <div className="bilan__barre">
-        <Link to="/">← Retour au cahier</Link>
+        <Link className="btn btn--fantome" to="/">
+          <ArrowLeft size={15} className="icone" aria-hidden="true" />
+          Retour au cahier
+        </Link>
         <button type="button" className="btn" onClick={() => window.print()}>
+          <Printer size={15} className="icone" aria-hidden="true" />
           Imprimer le bilan
         </button>
       </div>
 
       <article className="bilan">
-        <header>
-          <h1 style={{ marginBottom: 4 }}>Bilan NSI — {eleve.prenom}</h1>
-          <p className="discret">
+        <header style={{ display: 'grid', gap: 10 }}>
+          <h1>Bilan NSI de {eleve.prenom}</h1>
+          <p className="discret" style={{ margin: 0 }}>
             {eleve.classe ? `${eleve.classe} · ` : ''}établi le {formatDate(new Date().toISOString())}
           </p>
           <LegendeNiveaux niveaux={niveaux} />
@@ -55,35 +51,40 @@ export default function Bilan() {
 
         <h2>Compétences par thème</h2>
         {referentiel.themes.map((t) => (
-          <section key={t.id} style={{ marginBottom: 18 }}>
-            <h3 style={{ color: t.couleur }}>{t.titre}</h3>
-            <table className="tableau">
-              <thead>
-                <tr>
-                  <th>Compétence</th>
-                  <th style={{ width: '22%' }}>Lire</th>
-                  <th style={{ width: '22%' }}>Écrire</th>
-                </tr>
-              </thead>
-              <tbody>
-                {t.competences
-                  .filter((c) => !c.archive)
-                  .map((c) => {
-                    const n = niveauDe(suivi, c.id)
-                    return (
-                      <tr key={c.id}>
-                        <td>{c.label}</td>
-                        <td>
-                          <Niveau valeur={n.lire} niveaux={niveaux} />
-                        </td>
-                        <td>
-                          <Niveau valeur={n.ecrire} niveaux={niveaux} />
-                        </td>
-                      </tr>
-                    )
-                  })}
-              </tbody>
-            </table>
+          <section key={t.id}>
+            <h3>
+              <span className="point" style={{ '--c': t.couleur }} aria-hidden="true" />
+              {t.titre}
+            </h3>
+            <div className="bilan-table">
+              <table className="tableau">
+                <thead>
+                  <tr>
+                    <th>Compétence</th>
+                    <th style={{ width: '24%' }}>Lire</th>
+                    <th style={{ width: '24%' }}>Écrire</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {t.competences
+                    .filter((c) => !c.archive)
+                    .map((c) => {
+                      const n = niveauDe(suivi, c.id)
+                      return (
+                        <tr key={c.id}>
+                          <td>{c.label}</td>
+                          <td>
+                            <Niveau valeur={n.lire} niveaux={niveaux} />
+                          </td>
+                          <td>
+                            <Niveau valeur={n.ecrire} niveaux={niveaux} />
+                          </td>
+                        </tr>
+                      )
+                    })}
+                </tbody>
+              </table>
+            </div>
           </section>
         ))}
 
@@ -94,7 +95,7 @@ export default function Bilan() {
           <ul>
             {forts.map((c) => (
               <li key={c.id}>
-                {c.label} <span className="discret petit">({c.theme.court})</span>
+                {c.label} <span className="discret petit">· {c.theme.court}</span>
               </li>
             ))}
           </ul>
@@ -107,13 +108,13 @@ export default function Bilan() {
           <ul>
             {aTravailler.map((c) => {
               const n = niveauDe(suivi, c.id)
-              const axes = [
-                [1, 2].includes(n.lire) && 'lire',
-                [1, 2].includes(n.ecrire) && 'écrire',
-              ].filter(Boolean)
+              const axes = [[1, 2].includes(n.lire) && 'lire', [1, 2].includes(n.ecrire) && 'écrire'].filter(Boolean)
               return (
                 <li key={c.id}>
-                  {c.label} <span className="discret petit">({c.theme.court}, {axes.join(' et ')})</span>
+                  {c.label}{' '}
+                  <span className="discret petit">
+                    · {c.theme.court}, {axes.join(' et ')}
+                  </span>
                 </li>
               )
             })}
@@ -127,10 +128,9 @@ export default function Bilan() {
           <ul>
             {blocages.map((n) => (
               <li key={n.id}>
-                <span className="annotation">{n.texte}</span>
+                {n.texte}{' '}
                 <span className="discret petit">
-                  {' '}
-                  · {trouverCompetence(referentiel, n.competence)?.label || 'général'} · {formatDate(n.date)}
+                  · {trouverCompetence(referentiel, n.competence)?.label || 'général'}, {formatDate(n.date)}
                 </span>
               </li>
             ))}
@@ -138,49 +138,51 @@ export default function Bilan() {
         )}
 
         <h2>Exercices faits</h2>
-        <div className="bilan-chiffres">
-          <div>
-            <strong>{derniers.size}</strong>
-            <span className="discret">exercices sur {exercices.exercices.length}</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--maitrise)' }}>{compte.seule}</strong>
-            <span className="discret">réussis seule</span>
-          </div>
-          <div>
-            <strong style={{ color: '#a07f00' }}>{compte.aide}</strong>
-            <span className="discret">réussis avec aide</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--stylo-rouge)' }}>{compte.echec}</strong>
-            <span className="discret">pas réussis</span>
-          </div>
-        </div>
-        <p className="petit discret" style={{ marginTop: 8 }}>
+        <p>
+          {derniers.size} exercice{derniers.size > 1 ? 's' : ''} fait{derniers.size > 1 ? 's' : ''} sur {exercices.exercices.length}
+          {derniers.size > 0 && (
+            <>
+              {'\u00a0'}: <strong style={{ color: 'var(--vert)', fontWeight: 600 }}>{compte.seule} réussi{compte.seule > 1 ? 's' : ''} seule</strong>,{' '}
+              <strong style={{ color: 'var(--jaune)', fontWeight: 600 }}>{compte.aide} avec aide</strong>,{' '}
+              <strong style={{ color: 'var(--rouge)', fontWeight: 600 }}>
+                {compte.echec} pas réussi{compte.echec > 1 ? 's' : ''}
+              </strong>
+              .
+            </>
+          )}
+        </p>
+        <p className="petit discret">
           Compté sur le dernier essai de chaque exercice ({suivi.resultats.length} essai
           {suivi.resultats.length > 1 ? 's' : ''} en tout).
         </p>
         {derniers.size > 0 && (
-          <table className="tableau" style={{ marginTop: 8 }}>
-            <thead>
-              <tr>
-                <th>Exercice</th>
-                <th>Dernier résultat</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...derniers.values()].map((r) => (
-                <tr key={r.exercice}>
-                  <td>
-                    <code className="inline">{r.exercice}</code> {parId[r.exercice]?.titre}
-                  </td>
-                  <td>{{ seule: 'Réussi seule', aide: 'Avec aide', echec: 'Pas réussi' }[r.resultat]}</td>
-                  <td>{formatDate(r.date, { day: 'numeric', month: 'short' })}</td>
+          <div className="bilan-table" style={{ marginTop: 12 }}>
+            <table className="tableau">
+              <thead>
+                <tr>
+                  <th>Exercice</th>
+                  <th>Dernier résultat</th>
+                  <th className="num">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[...derniers.values()].map((r) => (
+                  <tr key={r.exercice}>
+                    <td>
+                      <span className="ligne__titre">
+                        <span className="id">{r.exercice}</span>
+                        <span>{parId[r.exercice]?.titre}</span>
+                      </span>
+                    </td>
+                    <td>
+                      <Tag couleur={COULEUR_RESULTAT[r.resultat]}>{RESULTATS[r.resultat]}</Tag>
+                    </td>
+                    <td className="num discret">{formatDate(r.date, { day: 'numeric', month: 'short' })}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
 
         <h2>Séances</h2>
@@ -188,16 +190,16 @@ export default function Bilan() {
           <p className="vide">Aucune séance faite pour l’instant.</p>
         ) : (
           faites.map((s) => (
-            <section key={s.id} style={{ marginBottom: 14, breakInside: 'avoid' }}>
+            <section key={s.id} style={{ marginBottom: 18, breakInside: 'avoid' }}>
               <h3>
-                Séance {s.numero} — {s.titre}
-                {s.date && <span className="discret petit"> · {formatDate(s.date)}</span>}
+                Séance {s.numero} · {s.titre}
+                {s.date && <span className="discret petit" style={{ fontWeight: 400 }}>{formatDate(s.date)}</span>}
               </h3>
               {s.bilan ? <p style={{ whiteSpace: 'pre-wrap' }}>{s.bilan}</p> : <p className="vide">Pas de bilan écrit.</p>}
             </section>
           ))
         )}
       </article>
-    </>
+    </div>
   )
 }

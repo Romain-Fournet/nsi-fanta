@@ -1,19 +1,16 @@
-import { BlocCode, Entete } from '../components/ui.jsx'
-
-function Carte({ titre, children }) {
-  return (
-    <section className="feuille">
-      <h2>{titre}</h2>
-      {children}
-    </section>
-  )
-}
+import { BookOpen, Printer } from 'lucide-react'
+import { BlocCode, Carte, Entete } from '../components/ui.jsx'
 
 export default function Memo() {
   return (
     <>
-      <Entete titre="Mémo NSI" sousTitre="Fiche de syntaxe à garder à côté de soi.">
+      <Entete
+        icone={BookOpen}
+        titre="Mémo NSI"
+        sousTitre="La fiche de syntaxe à garder à côté de soi : Python, les pièges, SQL, complexités, récursivité et dichotomie."
+      >
         <button type="button" className="btn btn--clair" onClick={() => window.print()}>
+          <Printer size={15} className="icone" aria-hidden="true" />
           Imprimer
         </button>
       </Entete>
@@ -26,7 +23,7 @@ nom = "Fanta"          # str
 moyenne = 14.5         # float
 admis = True           # bool
 
-if moyenne >= 10:      # comparaison : ==  !=  <  <=  >  >=
+if moyenne >= 10:      # ==  !=  <  <=  >  >=
     print("admis")
 elif moyenne >= 8:
     print("oral")
@@ -54,7 +51,7 @@ for i in range(len(liste)):  # chaque indice
 
 n = 10
 while n > 0:               # tant que…
-    n = n // 2             # ⚠ faire évoluer n !`}
+    n = n // 2       # faire évoluer n !`}
           />
         </Carte>
 
@@ -69,7 +66,7 @@ notes[1] = 9      # modifie
 14 in notes       # False
 
 vide = []
-carres = [x * x for x in range(4)]     # [0, 1, 4, 9]
+carres = [x * x for x in range(4)]  # [0, 1, 4, 9]
 pairs = [x for x in notes if x % 2 == 0]`}
           />
         </Carte>
@@ -107,7 +104,7 @@ for m in mots:
     for x in liste:
         if x > m:
             m = x
-    return m          # renvoie : on peut réutiliser le résultat
+    return m          # renvoie le résultat
 
 assert maximum([3, 9, 2]) == 9
 assert maximum([-5]) == -5
@@ -166,7 +163,8 @@ JOIN Livre ON Emprunt.id_livre = Livre.id_livre;
 INSERT INTO Livre (id_livre, titre, auteur, annee, genre)
 VALUES (20, 'Nouveau', 'Auteur', 2024, 'Roman');
 UPDATE Livre SET annee = 2023 WHERE id_livre = 20;
-DELETE FROM Livre WHERE id_livre = 20;  -- ⚠ sans WHERE : tout part`}
+DELETE FROM Livre WHERE id_livre = 20;
+-- attention : sans WHERE, tout est supprimé`}
           />
           <p className="petit">
             Clé primaire : identifie chaque ligne, unique. Clé étrangère (#) : fait référence à la clé primaire d’une
@@ -203,16 +201,16 @@ def hachage(mot, taille):
     s = 0
     for c in mot:
         s = s + ord(c)
-    return s % taille     # un indice entre 0 et taille - 1`}
+    return s % taille   # entre 0 et taille - 1`}
           />
         </Carte>
 
         <Carte titre="Fonction récursive">
           <BlocCode
             code={`def somme(n):
-    if n == 0:                 # 1. cas de base : on s'arrête
+    if n == 0:               # cas de base
         return 0
-    return n + somme(n - 1)    # 2. appel sur un problème plus petit
+    return n + somme(n - 1)  # appel plus petit
 
 # somme(3) = 3 + somme(2)
 #          = 3 + 2 + somme(1)

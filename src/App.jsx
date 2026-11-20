@@ -1,5 +1,16 @@
 import { NavLink, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronsUpDown,
+  CircleAlert,
+  FileText,
+  LayoutGrid,
+  NotebookPen,
+  SquareCode,
+  Target,
+} from 'lucide-react'
 import { useStore } from './store.jsx'
 import { formatDate, joursAvant, prochainExamen } from './lib/outils.js'
 import TableauDeBord from './pages/TableauDeBord.jsx'
@@ -12,12 +23,12 @@ import Memo from './pages/Memo.jsx'
 import Bilan from './pages/Bilan.jsx'
 
 const PAGES = [
-  { to: '/', label: 'Tableau de bord', end: true },
-  { to: '/competences', label: 'Compétences' },
-  { to: '/seances', label: 'Séances' },
-  { to: '/exercices', label: 'Exercices' },
-  { to: '/memo', label: 'Mémo' },
-  { to: '/bilan', label: 'Bilan' },
+  { to: '/', label: 'Tableau de bord', icone: LayoutGrid, end: true },
+  { to: '/competences', label: 'Compétences', icone: Target },
+  { to: '/seances', label: 'Séances', icone: CalendarDays },
+  { to: '/exercices', label: 'Exercices', icone: SquareCode },
+  { to: '/memo', label: 'Mémo', icone: BookOpen },
+  { to: '/bilan', label: 'Bilan', icone: FileText },
 ]
 
 function IndicateurSauvegarde() {
@@ -36,60 +47,60 @@ function IndicateurSauvegarde() {
   )
 }
 
-function CompteARebours() {
+function Echeance() {
   const { eleve } = useStore()
   const examen = prochainExamen(eleve)
-  if (!examen) {
-    return (
-      <div className="compte">
-        <div className="compte__texte">Aucun examen daté.</div>
-      </div>
-    )
-  }
+  if (!examen) return null
   const jours = joursAvant(examen.date)
   return (
-    <div className="compte">
-      <div className="compte__nombre">{jours === 0 ? 'Jour J' : `J-${jours}`}</div>
-      <div className="compte__texte">
-        {examen.titre}
-        <br />
-        {formatDate(examen.date)}
-      </div>
+    <div className="echeance" title={`${examen.titre} — ${formatDate(examen.date)}`}>
+      <span className="echeance__jours">{jours === 0 ? 'J' : `J-${jours}`}</span>
+      <span className="echeance__titre">{examen.titre}</span>
+      <span className="echeance__date">{formatDate(examen.date, { weekday: 'long', day: 'numeric', month: 'long' })}</span>
     </div>
   )
 }
 
 function Barre() {
-  const { eleves, eleveId, choisirEleve } = useStore()
+  const { eleves, eleveId, eleve, choisirEleve } = useStore()
   return (
     <aside className="barre">
-      <NavLink to="/" className="barre__titre">
-        Cahier NSI <span>suivi</span>
+      <NavLink to="/" className="espace" aria-label="Cahier NSI, tableau de bord">
+        <span className="espace__logo" aria-hidden="true">
+          <NotebookPen size={15} className="icone" />
+        </span>
+        <span>
+          <span className="espace__nom" style={{ display: 'block' }}>
+            Cahier NSI
+          </span>
+          <span className="espace__sous">Terminale · {new Date().getFullYear()}</span>
+        </span>
       </NavLink>
 
-      <div className="barre__bloc">
-        <label className="barre__label" htmlFor="choix-eleve">
+      <div className="eleve-choix">
+        <label className="sr-only" htmlFor="choix-eleve">
           Élève
         </label>
+        <span className="eleve-choix__avatar" aria-hidden="true">
+          {eleve?.prenom?.[0] ?? '?'}
+        </span>
         <select id="choix-eleve" value={eleveId || ''} onChange={(e) => choisirEleve(e.target.value)}>
           {(eleves?.eleves || []).map((e) => (
             <option key={e.id} value={e.id}>
               {e.prenom}
-              {e.classe ? ` — ${e.classe}` : ''}
             </option>
           ))}
         </select>
+        <ChevronsUpDown size={14} className="icone eleve-choix__chevron" aria-hidden="true" />
       </div>
 
-      <div className="barre__bloc">
-        <span className="barre__label">Prochain examen</span>
-        <CompteARebours />
-      </div>
+      <Echeance />
 
       <nav className="nav" aria-label="Pages">
-        {PAGES.map((p) => (
-          <NavLink key={p.to} to={p.to} end={p.end}>
-            {p.label}
+        {PAGES.map(({ to, label, icone: Icone, end }) => (
+          <NavLink key={to} to={to} end={end}>
+            <Icone size={17} className="icone" aria-hidden="true" />
+            {label}
           </NavLink>
         ))}
       </nav>
@@ -118,9 +129,9 @@ function Mise() {
 
 function PageIntrouvable() {
   return (
-    <div className="feuille">
-      <h1>Page introuvable</h1>
-      <p>
+    <div className="carte" style={{ padding: 28, maxWidth: 520 }}>
+      <h1 style={{ fontSize: '1.5rem', marginBottom: 8 }}>Page introuvable</h1>
+      <p className="discret">
         Cette adresse ne correspond à aucune page. <NavLink to="/">Retour au tableau de bord</NavLink>
       </p>
     </div>
@@ -133,10 +144,17 @@ export default function App() {
   if (chargement.etat === 'erreur') {
     return (
       <div className="ecran-centre">
-        <div className="alerte">
-          <strong>Chargement impossible.</strong>
-          <p>{chargement.message}</p>
-          <p className="petit">Vérifie que le site est lancé avec « npm run dev » et que le dossier data/ existe.</p>
+        <div className="carte">
+          <div className="alerte">
+            <CircleAlert size={18} className="icone" aria-hidden="true" />
+            <div>
+              <strong>Chargement impossible.</strong>
+              <p style={{ margin: '4px 0 0' }}>{chargement.message}</p>
+            </div>
+          </div>
+          <p className="petit discret" style={{ marginTop: 14 }}>
+            Vérifie que le site est lancé avec « npm run dev » et que le dossier data/ existe.
+          </p>
         </div>
       </div>
     )
@@ -151,9 +169,9 @@ export default function App() {
   if (!eleve) {
     return (
       <div className="ecran-centre">
-        <div className="feuille">
-          <h1>Aucun élève</h1>
-          <p>
+        <div className="carte">
+          <h1 style={{ fontSize: '1.4rem', marginBottom: 8 }}>Aucun élève</h1>
+          <p className="discret">
             Ajoute un élève dans <code className="inline">data/eleves.json</code>
             {eleves?.eleves?.length === 0 ? ' (la liste est vide)' : ''}, puis recharge la page.
           </p>
